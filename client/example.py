@@ -10,7 +10,7 @@ if res != -1:
     while True:
         msg = c.execute("info","view")
         objects = ast.literal_eval(msg)
-        if objects[0]=='obstacle' or objects[0]=='bomb':
+        if objects[0] == 'obstacle' or objects[0] == 'bomb':
             c.execute("command","left")
         else:
             res = random.randint(0,4)

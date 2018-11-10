@@ -1,6 +1,7 @@
 import client
 import ast
 import random
+import socket
 
 class Client:
     def __init__(self,HOST='127.0.0.1',PORT=50000):

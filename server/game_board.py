@@ -1,4 +1,4 @@
-#teste123
+#teste1234
 import tkinter as tk
 import random
 from PIL import Image

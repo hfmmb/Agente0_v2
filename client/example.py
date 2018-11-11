@@ -7,6 +7,8 @@ res = c.connect()
 random.seed()   # To become ltrue random, a different seed is used! (clock time)
 
 lista_history = []
+lista_history_penaltys = []
+penalty = -1
 
 if res != -1:
     while True:
@@ -27,7 +29,10 @@ if res != -1:
         cord_x = int(posicao_atual[1])
         cord_y = int(posicao_atual[4])
         lista_history.append([cord_x, cord_y])
+        penalty = penalty * 2
+        lista_history_penaltys.append(penalty)
         print("LISTA:", lista_history)
+        print("PENALTYS: ", lista_history_penaltys)
         print([cord_x, cord_y])
 #------------------------------------Secção de codigo abaixo serve para o agente ver ao seu redor
         direc = " "
@@ -61,8 +66,9 @@ if res != -1:
             n_fitness = -9999999
             print("Encontrei obstaculo")
         elif [cord_x, cord_y - 1] in lista_history:
-            n_fitness = -20
-            print("ja passei por aqui")
+
+            n_fitness = lista_history_penaltys[lista_history.index([cord_x, cord_y - 1])]
+            print("NORTEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         elif norte == "['']":
              n_fitness = -10
              print("Casa vazia")
@@ -71,7 +77,7 @@ if res != -1:
             e_fitness = -9999999
             print("Encontrei obstaculo")
         elif [cord_x + 1, cord_y] in lista_history:
-            e_fitness = -20
+            e_fitness = lista_history_penaltys[lista_history.index([cord_x +1, cord_y])]
             print("ja passei por aqui")
         elif este == "['']":
             e_fitness = -10
@@ -81,7 +87,7 @@ if res != -1:
             s_fitness = -9999999
             print("Encontrei obstaculo")
         elif [cord_x, cord_y + 1] in lista_history:
-            s_fitness = -20
+            s_fitness = lista_history_penaltys[lista_history.index([cord_x, cord_y +1])]
             print("ja passei por aqui")
         elif sul == "['']":
             s_fitness = -10
@@ -91,7 +97,7 @@ if res != -1:
             o_fitness = -9999999
             print("Encontrei obstaculo")
         elif [cord_x - 1, cord_y] in lista_history:
-            o_fitness = -20
+            o_fitness = lista_history_penaltys[lista_history.index([cord_x - 1, cord_y])]
             print("ja passei por aqui")
         elif oeste == "['']":
             o_fitness = -10

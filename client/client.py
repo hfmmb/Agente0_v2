@@ -34,10 +34,5 @@ if  __name__=="__main__":
 
     res = client.connect()
 
-    if res !=-1:
-        while True:
-            action, value = input("Insert action value pairs:").split()
-            print("Action Value pair:", action, ":", value)
-            msg = client.execute(action,    value)
-            # test
-            client.print_message(msg)
+
+    res.execute("info", "view")

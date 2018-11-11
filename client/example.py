@@ -29,20 +29,22 @@ if res != -1:
         lista_history.append([cord_x, cord_y])
         print("LISTA:", lista_history)
         print([cord_x, cord_y])
+        direc = " "
 
 
+        while x < 5:  #Scan da area
+              direc = c.execute("info", "direction")
 
-        while x < 4:  #Scan da area
-              c.execute("command", "right")
-
-              if x == 4:
-                  este = c.execute("info", "view")
-              elif x == 3:
-                  norte = c.execute("info", "view")
-              elif x == 2:
+              if direc == "west":
                   oeste = c.execute("info", "view")
-              elif x == 1:
+              elif direc == "north":
+                  norte = c.execute("info", "view")
+              elif direc == "east":
+                  este = c.execute("info", "view")
+              elif direc == "south":
                   sul = c.execute("info", "view")
+
+              c.execute("command", "right")
 
               x = x + 1
         print("LISTA:", lista_history)

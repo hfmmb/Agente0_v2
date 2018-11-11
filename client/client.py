@@ -7,7 +7,8 @@ PORT = 50000      # The port used by the server
 
 class Client:
 
-    def __init__(self,HOST='127.0.0.1',PORT=50000):
+
+    def __init__(self,HOST='127.0.0.1', PORT=50000):
         self.host = HOST
         self.port = PORT
 

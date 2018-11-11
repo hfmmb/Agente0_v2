@@ -12,7 +12,7 @@ if res != -1:
     while True:
 
         c.execute("command", "set_steps")
-        x = 1
+
         sul = ""
         oeste = ""
         norte = ""
@@ -29,8 +29,9 @@ if res != -1:
         lista_history.append([cord_x, cord_y])
         print("LISTA:", lista_history)
         print([cord_x, cord_y])
+#------------------------------------Secção de codigo abaixo serve para o agente ver ao seu redor
         direc = " "
-
+        x = 1
 
         while x < 5:  #Scan da area
               direc = c.execute("info", "direction")
@@ -47,6 +48,7 @@ if res != -1:
               c.execute("command", "right")
 
               x = x + 1
+#------------------------------------------------------------------------------------------------------------
         print("LISTA:", lista_history)
 
         print("NORTE:", norte)
@@ -54,7 +56,7 @@ if res != -1:
         print("SUL:", sul)
         print("ESTE:", este)
         print("posicao atual:", posicao_atual)
-
+#---------------------------Secçao de codigo abaixo serve para o agente identificar o que viu e atribuir o fitness--------------------------------
         if norte == "['obstacle']":
             n_fitness = -9999999
             print("Encontrei obstaculo")
@@ -94,6 +96,7 @@ if res != -1:
         elif oeste == "['']":
             o_fitness = -10
             print("Casa vazia")
+#----------------------------------------------------------------------------------------------------------------------
 
 
         print(".......................................................................................................")
@@ -102,7 +105,104 @@ if res != -1:
         print("s_fitness:", s_fitness)
         print("e_fitness:", e_fitness)
         print(".......................................................................................................")
-        if n_fitness >= e_fitness and n_fitness >= s_fitness and n_fitness >= o_fitness:
+
+#-------------------------------Secçao de codigo abaixo serve pro cliente se movimentar tendo em conta os valores do fitness---
+
+        #-----Casos em qe existem 3 possiveis caminhos-----------------------
+
+        if n_fitness > e_fitness and n_fitness == s_fitness and n_fitness == o_fitness:
+            rand = random.randint(0,2)
+
+            if rand == 0: #Norte
+                c.execute("command", "north")
+            elif rand == 1:#Sul
+                c.execute("command", "south")
+            elif rand ==  2:#Oeste
+                c.execute("command", "west")
+        elif n_fitness == e_fitness and n_fitness > s_fitness and n_fitness == o_fitness:
+            rand = random.randint(0,2)
+            if rand == 0:  # Norte
+                c.execute("command", "north")
+            elif rand == 1:  # Este
+                c.execute("command", "east")
+            elif rand == 2:  # Oeste
+                c.execute("command", "west")
+
+        elif n_fitness == e_fitness and n_fitness == s_fitness and n_fitness > o_fitness:
+            rand = random.randint(0,2)
+
+            if rand == 0:  # Norte
+                c.execute("command", "north")
+            elif rand == 1:  # SUL
+                c.execute("command", "south")
+            elif rand == 2:  # Este
+                c.execute("command", "east")
+
+
+        elif s_fitness > n_fitness and s_fitness == e_fitness and s_fitness == o_fitness:
+            rand = random.randint(0,2)
+            if rand == 0:  # Sul
+                c.execute("command", "south")
+            elif rand == 1:  # Este
+                c.execute("command", "east")
+            elif rand == 2:  # Oeste
+                c.execute("command", "west")
+
+
+        # -----Casos em qe existem 2 possiveis caminhos-----------------------
+
+
+        elif n_fitness > e_fitness and n_fitness == s_fitness and n_fitness > o_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Norte
+                c.execute("command", "north")
+            elif rand == 1:  # Sul
+                c.execute("command", "south")
+
+        elif n_fitness > e_fitness and n_fitness > s_fitness and n_fitness == o_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Norte
+                c.execute("command", "north")
+            elif rand == 1:  # Oeste
+                c.execute("command", "west")
+
+        elif n_fitness == e_fitness and n_fitness > s_fitness and n_fitness > o_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Norte
+                c.execute("command", "north")
+            elif rand == 1:  # Este
+                c.execute("command", "east")
+
+        elif s_fitness > e_fitness and s_fitness > n_fitness and s_fitness == o_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Sul
+                c.execute("command", "south")
+            elif rand == 1:  # Oeste
+                c.execute("command", "west")
+
+        elif s_fitness == e_fitness and s_fitness > n_fitness and s_fitness > o_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Sul
+                c.execute("command", "south")
+            elif rand == 1:  # Este
+                c.execute("command", "east")
+
+        elif o_fitness == e_fitness and o_fitness > n_fitness and o_fitness > s_fitness:
+            rand = random.randint(0, 1)
+
+            if rand == 0:  # Oeste
+                c.execute("command", "west")
+            elif rand == 1:  # Este
+                c.execute("command", "east")
+
+
+        #------------casos em que somente existe 1 direcao certa---------
+        elif n_fitness >= e_fitness and n_fitness >= s_fitness and n_fitness >= o_fitness:
             c.execute("command", "north")
         elif e_fitness >= n_fitness and e_fitness >= s_fitness and e_fitness >= o_fitness:
             c.execute("command", "east")
@@ -110,6 +210,8 @@ if res != -1:
             c.execute("command", "south")
         elif o_fitness >= n_fitness and o_fitness >= e_fitness and o_fitness >= s_fitness:
             c.execute("command", "west")
+
+#----------------------------------------------------------------------------------------------------------------------------
 
 
 

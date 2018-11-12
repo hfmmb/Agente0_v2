@@ -273,8 +273,11 @@ def trepa_colinas():
                                 rand = random.randint(0, 1)
                                 if rand == 0:
                                     posicao_inicial_int[0] = posicao_inicial_int[0] - 1
+                                    c.execute("command", "west")
+
                                 elif rand == 1:
                                     posicao_inicial_int[0] = posicao_inicial_int[0] + 1
+                                    c.execute("command", "east")
                                 contador_tentativas = 0
                         elif lista_de_possibilidades[1] is ("['bomb']"):
                             print("bomba a frente")
@@ -300,10 +303,10 @@ def trepa_colinas():
 
 
 
-
-
+'''
 x = -1000
 while x != 0:
+
     try:
         x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas"))
         if x == 1:
@@ -318,4 +321,8 @@ while x != 0:
         print("Valor inexitente ou errado!", excepcao_erro)
 
 
-
+'''
+x = 0
+while x <40:
+    c.execute("command", "east")
+    x = x + 1

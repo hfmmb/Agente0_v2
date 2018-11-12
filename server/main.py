@@ -245,7 +245,7 @@ if __name__=="__main__":
     initialize_obstacles(images_directory,[])
     initialize_goal(images_directory,(3,5))
     initialize_bomb(images_directory,[],rows,columns)
-    #initiialize_weights(images_directory)
+    #initialize_weights(images_directory)
     root.update()
     # SERVER SERVER:
     #Starting server

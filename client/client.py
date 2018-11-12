@@ -47,5 +47,4 @@ if  __name__=="__main__":
 
     res = client.connect()
 
-
     res.execute("info", "view")

@@ -7,6 +7,7 @@ import tkinter as tk
 import time
 import traceback
 
+coordenadas_player = [2,2]
 def initialize_obstacles(imageDir,list_obstacles):
     i = 1
     for obst in list_obstacles:
@@ -241,9 +242,9 @@ if __name__=="__main__":
     board = gb.GameBoard(root,rows, columns)
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
     # BOARD BOARD:
-    initialize_obstacles(images_directory,[(0, 1), (1, 2), (2, 4), (3, 2), (5, 4)])
-    initialize_goal(images_directory,(5,5))
-    initialize_bomb(images_directory,[(0,5)],rows,columns)
+    initialize_obstacles(images_directory,[(2,4),(3,4),(4,4)])
+    initialize_goal(images_directory,(3,5))
+    initialize_bomb(images_directory,[],rows,columns)
     #initialize_weights(images_directory)
     root.update()
     # SERVER SERVER:
@@ -252,11 +253,11 @@ if __name__=="__main__":
     server = s.Server()
     # PLAYER PLAYER:
     #Initialize player
-    object = gb.Player(images_directory,'player', 0, 0, 'south', 'front', True)
-    object.set_home((0,0))
+    object = gb.Player(images_directory,'player', coordenadas_player[0], coordenadas_player[1], 'south', 'front', True)
+    object.set_home((coordenadas_player[0], coordenadas_player[1]))
     object.close_eyes()
     #Add player
-    board.add(object, 0, 0)
+    board.add(object, coordenadas_player[0], coordenadas_player[1])
     root.update()
 
     #Loop

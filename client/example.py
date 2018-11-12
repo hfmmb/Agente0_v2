@@ -24,8 +24,11 @@ if res != -1:
         s_fitness = 0
         e_fitness = 0
         o_fitness = 0
-        posicao_atual = c.execute("info", "position")
+        try:
+            posicao_atual = c.execute("info", "position")
 
+        except ValueError as excepcao_erro:
+            print("Valor invalido ou nulo", excepcao_erro)
         cord_x = int(posicao_atual[1])
         cord_y = int(posicao_atual[4])
         lista_history.append([cord_x, cord_y])

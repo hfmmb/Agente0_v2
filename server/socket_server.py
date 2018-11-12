@@ -16,13 +16,18 @@ class Server:
             s.bind((HOST, PORT))
             print("Listening...")
             s.listen()
-            conn, addr = s.accept()
-            with conn:
-                print('Connected by', addr)
-                while True:
-                    data = conn.recv(1024)
-                    print(data.decode())
-                    conn.sendall(data)
+            while True:
+                conn, addr = s.accept()
+                with conn:
+                    print('Connected by', addr)
+                    while True:
+                        try:
+                            data = conn.recv(1024)
+                            print(data.decode())
+                            conn.sendall(data)
+                        except socket.error as erro_excepcao:
+                            print("Erro na recepção de dados, o cliente esta ligado? ", erro_excepcao)
+                            break
 
 
 if __name__ == "__main__":

@@ -92,129 +92,138 @@ def initialize_weights(imageDir):
 def loop():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
-        print("Listening...")
-        s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
-            while True:
-                data = conn.recv(1024)
-                #                    if not data:
-                #                        break
+        while True:
+            print("Listening...")
+            s.listen()
+            conn, addr = s.accept()
+            with conn:
+                print('Connected by', addr)
+                while True:
+                    try:
+                        data = conn.recv(1024)
+                        #                    if not data:
+                        #                        break
 
-                print(data.decode())
-                type, value = data.decode().split()
-                res = ""
-                if type == 'command':
-                    #-----------------------
-                    # movements without considering the direction
-                    # of the face of the object but testing the objects
-                    #-----------------------
-                    if   value == 'north':
-                        object.close_eyes()
-                        res = board.move_north(object,'forward')
-                        if not board.is_target_obstacle(res):
-                            board.change_position(object, res[0], res[1])
+                        print(data.decode())
 
-                    elif value == 'south':
-                        object.close_eyes()
-                        res = board.move_south(object,'forward')
-                        if not board.is_target_obstacle(res):
-                            board.change_position(object, res[0], res[1])
+                        type, value = data.decode().split()
+                    except ValueError as erro_excepcao:
+                        print("Valor nulo ou menor que dois?", erro_excepcao)
+                        break
+                    res = ""
+                    if type == 'command':
+                        #-----------------------
+                        # movements without considering the direction
+                        # of the face of the object but testing the objects
+                        #-----------------------
+                        if   value == 'north':
+                            object.close_eyes()
+                            res = board.move_north(object,'forward')
+                            if not board.is_target_obstacle(res):
+                                board.change_position(object, res[0], res[1])
 
-                    elif value == 'east':
-                        object.close_eyes()
-                        res = board.move_east(object,'forward')
-                        if not board.is_target_obstacle(res):
-                            board.change_position(object, res[0], res[1])
+                        elif value == 'south':
+                            object.close_eyes()
+                            res = board.move_south(object,'forward')
+                            if not board.is_target_obstacle(res):
+                                board.change_position(object, res[0], res[1])
 
-                    elif value == 'west':
-                        object.close_eyes()
-                        res = board.move_west(object,'forward')
-                        if not board.is_target_obstacle(res):
-                            board.change_position(object, res[0], res[1])
+                        elif value == 'east':
+                            object.close_eyes()
+                            res = board.move_east(object,'forward')
+                            if not board.is_target_obstacle(res):
+                                board.change_position(object, res[0], res[1])
 
-                    #-----------------------
-                    # move to home
-                    #-----------------------
-                    elif value == 'home':
-                        res = board.move_home(object)
+                        elif value == 'west':
+                            object.close_eyes()
+                            res = board.move_west(object,'forward')
+                            if not board.is_target_obstacle(res):
+                                board.change_position(object, res[0], res[1])
 
-                    elif value == 'forward':
-                        res = board.move(object, 'forward')
+                        #-----------------------
+                        # move to home
+                        #-----------------------
+                        elif value == 'home':
+                            res = board.move_home(object)
 
-                    elif value == 'left':
-                        res = board.turn_left(object)
+                        elif value == 'forward':
+                            res = board.move(object, 'forward')
 
-                    elif value == 'right':
-                        res = board.turn_right(object)
+                        elif value == 'left':
+                            res = board.turn_left(object)
 
-                    elif value =="set_steps":
-                        res=board.set_stepsview(object)
+                        elif value == 'right':
+                            res = board.turn_right(object)
 
-                    elif value =="reset_steps":
-                        res=board.reset_stepsview(object)
+                        elif value =="set_steps":
+                            res=board.set_stepsview(object)
 
-                    elif value =="open_eyes":
-                        res=object.open_eyes()
+                        elif value =="reset_steps":
+                            res=board.reset_stepsview(object)
 
-                    elif value =="close_eyes":
-                        res=object.close_eyes()
-                    elif value=="clean_board":
-                        res = board.clean_board()
-                    elif value == "bye" or value =="exit":
-                        conn.close()
-                        exit(1)
+                        elif value =="open_eyes":
+                            res=object.open_eyes()
+
+                        elif value =="close_eyes":
+                            res=object.close_eyes()
+                        elif value=="clean_board":
+                            res = board.clean_board()
+                        elif value == "bye" or value =="exit":
+                            conn.close()
+                            exit(1)
+                        else:
+                            pass
+                    elif type == 'info':
+                        if value == 'direction':
+                            res = object.get_direction()
+                        elif value == 'view':
+                            front = board.getplaceahead(object)
+                            res = board.view_object(object,front)
+                        elif value == "weights":
+                            res = board.view_weights(object,'front')
+                        elif value == 'map':
+                            print('Map:',board.view_global_weights(object))
+                            res = board.view_global_weights(object)
+                        elif value == 'obstacles':
+                            print('Obstacles:',board.view_obstacles(object))
+                            res = board.view_obstacles(object)
+                        elif value =='goal' or value=='target':
+                            res = board.getgoalposition(object)
+                            #print('Goal:',res)
+                        elif value =='position':
+                            res = (object.get_x(), object.get_y())
+                            #print('Position:', res)
+                        elif value=='maxcoord':
+                            res = board.get_maxcoord()
+                            #print('MaxCoordinates:', res)
+                        elif value =='north':
+                            #View north
+                            front = board.getplacedir(object,'north')
+                            res = board.view_object(object,front)
+                        elif value =='south':
+                            #View north
+                            front = board.getplacedir(object,'south')
+                            res = board.view_object(object,front)
+                        elif value =='east':
+                            #View north
+                            front = board.getplacedir(object,'east')
+                            res = board.view_object(object,front)
+                        elif value =='west':
+                            #View north
+                            front = board.getplacedir(object,'west')
+                            res = board.view_object(object,front)
+
+                        else:
+                            pass
+                    if res != '':
+                        return_data = str.encode(str(res))
                     else:
-                        pass
-                elif type == 'info':
-                    if value == 'direction':
-                        res = object.get_direction()
-                    elif value == 'view':
-                        front = board.getplaceahead(object)
-                        res = board.view_object(object,front)
-                    elif value == "weights":
-                        res = board.view_weights(object,'front')
-                    elif value == 'map':
-                        print('Map:',board.view_global_weights(object))
-                        res = board.view_global_weights(object)
-                    elif value == 'obstacles':
-                        print('Obstacles:',board.view_obstacles(object))
-                        res = board.view_obstacles(object)
-                    elif value =='goal' or value=='target':
-                        res = board.getgoalposition(object)
-                        #print('Goal:',res)
-                    elif value =='position':
-                        res = (object.get_x(), object.get_y())
-                        #print('Position:', res)
-                    elif value=='maxcoord':
-                        res = board.get_maxcoord()
-                        #print('MaxCoordinates:', res)
-                    elif value =='north':
-                        #View north
-                        front = board.getplacedir(object,'north')
-                        res = board.view_object(object,front)
-                    elif value =='south':
-                        #View north
-                        front = board.getplacedir(object,'south')
-                        res = board.view_object(object,front)
-                    elif value =='east':
-                        #View north
-                        front = board.getplacedir(object,'east')
-                        res = board.view_object(object,front)
-                    elif value =='west':
-                        #View north
-                        front = board.getplacedir(object,'west')
-                        res = board.view_object(object,front)
-
-                    else:
-                        pass
-                if res != '':
-                    return_data = str.encode(str(res))
-                else:
-                    return_data = str.encode("what? commands= <forward,left,right,set_steps,reset_steps, open_eyes, close_eyes> info=<direction,view,weights,map,goal,postion,obstacles,maxcoord>")
-                conn.sendall(return_data)
-                root.update()
+                        return_data = str.encode("what? commands= <forward,left,right,set_steps,reset_steps, open_eyes, close_eyes> info=<direction,view,weights,map,goal,postion,obstacles,maxcoord>")
+                    try:
+                        conn.sendall(return_data)
+                        root.update()
+                    except BrokenPipeError as erro_excepcao:
+                        print("Conexão interrompida com o cliente?", erro_excepcao)
 
 if __name__=="__main__":
     #Host and Port

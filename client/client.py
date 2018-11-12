@@ -18,14 +18,20 @@ class Client:
 
     def connect(self):
             self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.connect((self.host, self.port))
+            try:
+                self.s.connect((self.host, self.port))
+            except ConnectionRefusedError as excepcao_erro:
+                print("Servidor desligado?", excepcao_erro)
 
-    def execute(self,   action, value,  sleep_t=0.5):
-
-        self.s.sendall(str.encode(action+" "+value))
-        data = self.s.recv(2048)
-        print('Received', repr(data))
-        msg = data.decode()
+    def execute(self,   action, value,  sleep_t=0.1):
+        msg = "Erro!"
+        try:
+            self.s.sendall(str.encode(action+" "+value))
+            data = self.s.recv(2048)
+            print('Received', repr(data))
+            msg = data.decode()
+        except BrokenPipeError as excepcao_erro:
+            print("Servidor desligado?", excepcao_erro)
         time.sleep(sleep_t)
         return msg
 

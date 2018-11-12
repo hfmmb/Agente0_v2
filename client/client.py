@@ -47,5 +47,9 @@ if  __name__=="__main__":
 
     res = client.connect()
 
+    client1 = Client('127.0.0.1', 40000)
+
+    res1 = client1.connect()
+
 
     res.execute("info", "view")

@@ -269,8 +269,8 @@ def trepa_colinas():
                     if posicao_inicial_int[1] < goal[1]:
                         if lista_de_possibilidades[1] == ("['obstacle']"):
                             print("obstaculo a frente")
+                            contador_tentativas += 1
                             if contador_tentativas > 3:
-                                contador_tentativas += 1
                                 print("entrei")
                                 rand = random.randint(0, 1)
                                 if rand == 0:

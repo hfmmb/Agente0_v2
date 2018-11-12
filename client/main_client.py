@@ -4,7 +4,7 @@ import random
 from tkinter import messagebox
 c = client.Client('127.0.0.1', 50000)
 res = c.connect()
-random.seed()   # To become ltrue random, a different seed is used! (clock time)
+random.seed()   # To become true random, a different seed is used! (clock time)
 def projeto_inicial():
     lista_history = []
     lista_history_penaltys = []

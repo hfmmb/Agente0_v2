@@ -272,14 +272,44 @@ def trepa_colinas():
                             contador_tentativas += 1
                             if contador_tentativas > 3:
                                 print("entrei")
-                                rand = random.randint(0, 1)
+                                rand = random.randint(0,3)
                                 if rand == 0:
+
                                     posicao_inicial_int[0] -= 1
                                     c.execute("command", "west")
+                                    posicao_atual_server = c.execute("info","position")
+                                    print("Nao me consigo mover! Obstaculo?", "Posicao Cliente: ", posicao_inicial_int,"Posicao Servidor", posicao_atual_server)
+
+                                    if not(posicao_atual_server[1] == str(posicao_inicial_int[0]) and posicao_atual_server[4] == str(posicao_inicial_int[1])):
+                                        posicao_inicial_int[0] += 1
 
                                 elif rand == 1:
                                     posicao_inicial_int[0] += 1
                                     c.execute("command", "east")
+                                    posicao_atual_server = c.execute("info", "position")
+                                    print("Nao me consigo mover! Obstaculo?","Posicao Cliente: ", posicao_inicial_int, "Posicao Servidor", posicao_atual_server)
+                                    if not (posicao_atual_server[1] == str(posicao_inicial_int[0]) and posicao_atual_server[4] == str(posicao_inicial_int[1])):
+
+                                        posicao_inicial_int[0] -= 1
+                                elif rand == 2:
+                                        posicao_inicial_int[1] -= 1
+                                        c.execute("command", "north")
+                                        posicao_atual_server = c.execute("info", "position")
+                                        print("Nao me consigo mover! Obstaculo?", "Posicao Cliente: ", posicao_inicial_int, "Posicao Servidor", posicao_atual_server)
+
+                                        if not (posicao_atual_server[1] == str(posicao_inicial_int[0]) and posicao_atual_server[4] == str(posicao_inicial_int[1])):
+
+                                            posicao_inicial_int[1] += 1
+                                elif rand == 3:
+                                        posicao_inicial_int[1] += 1
+                                        c.execute("command", "south")
+                                        posicao_atual_server = c.execute("info", "position")
+                                        print("Nao me consigo mover! Obstaculo?", "Posicao Cliente: ",posicao_inicial_int, "Posicao Servidor", posicao_atual_server)
+
+                                        if not (posicao_atual_server[1] == str(posicao_inicial_int[0]) and posicao_atual_server[4] == str(posicao_inicial_int[1])):
+
+                                            posicao_inicial_int[1] -= 1
+
                                 contador_tentativas = 0
                         elif lista_de_possibilidades[1] == ("['bomb']"):
                             print("bomba a frente")

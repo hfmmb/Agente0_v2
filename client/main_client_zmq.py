@@ -20,12 +20,12 @@ from tkinter import messagebox
 
 c = Client()
 c.send_request()
-path_to_goal = [c.send_request("info", "position"),  # Current Position
-                c.send_request("info", "north"),     # Up
-                c.send_request("info", "south"),     # Down
-                c.send_request("info", "west"),      # Left
-                c.send_request("info", "east")]      # Right
+#path_to_goal = [c.send_request("info", "position"),  # Current Position
+#                c.send_request("info", "north"),     # Up
+#                c.send_request("info", "south"),     # Down
+#                c.send_request("info", "west"),      # Left
+#                c.send_request("info", "east")]      # Right
 
 #If   [list of coordenates to goal] then the goal was found
 #Else [None] then the goal was not found
-path_to_goal = c.pesquisa_profundidade(5, path_to_goal)
+#path_to_goal = c.pesquisa_profundidade(5, path_to_goal)

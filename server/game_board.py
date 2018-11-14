@@ -1,4 +1,3 @@
-#teste12345
 import tkinter as tk
 import random
 from PIL import Image
@@ -10,12 +9,12 @@ import sys
 # ------------------------------------------------------------
 
 
-class Object():
-    """Every object in the world is an object.
+class Object:
+    """
+    Every object in the world is an object.
 
     Different types of objects are special objects with specific attributes. This
     is the general object.
-
     """
     def __init__(self, imageDir, name, imageFile, type, x, y, dir, eyes_open=False, width=0, heigh=0):
         self.name = name
@@ -84,12 +83,11 @@ class Object():
 
         self.steps_view = False
 
-
-
     def set_position(self, x, y):
 
         self.x = x
         self.y = y
+
     def get_y(self):
 
         return self.y
@@ -114,9 +112,11 @@ class Object():
         self.set_image(self.type,self.imagefile, self.width, self.heigh)
 
     def get_direction(self):
+
         return self.direction
 
     def set_photoimage(self, imageFile, width, height):
+
         im = Image.open(imageFile)
         im.thumbnail((width,height))
         photo = ImageTk.PhotoImage(im)
@@ -139,8 +139,8 @@ class Object():
     def get_worldview(self):
         return self.view
 
-
     def set_worldview(self, front='', north='', east='', south='', west=''):
+
         if self.view_type == "front":
             self.view={"front":front}
         elif self.view == "around":

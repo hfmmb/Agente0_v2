@@ -4,14 +4,10 @@ import zmq
 
 class Server:
 
-    def __init__(self,
-                 ip="127.0.0.1",
-                 port=50000):
+    def __init__(self, ip="127.0.0.1", port=50000):
         context = zmq.Context()
         socket = context.socket(zmq.REP)
-        socket.bind("tcp://" +
-                    ip +
-                    ":"+str(port))
+        socket.bind("tcp://" + ip + ":" + str(port))
         self.connected = socket
         pass
 
@@ -34,7 +30,3 @@ class Server:
 
     def close_connection(self):
         pass
-
-
-s = Server()
-s.new_listener()

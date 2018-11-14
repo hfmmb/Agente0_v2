@@ -1,5 +1,5 @@
 """
-@autores: Helder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
+@autores: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
           João Pedro Moreira Sousa <joao.sousa201@gmail.com>;
           Leandro Jorge O. Branco;
 
@@ -13,7 +13,19 @@ ZeroMQ: http://zguide.zeromq.org/
 """
 
 from client_zmq import Client
+import ast
+import random
+from tkinter import messagebox
 
 
 c = Client()
-c.send_message()
+c.send_request()
+path_to_goal = [c.send_request("info", "position"),  # Current Position
+                c.send_request("info", "north"),     # Up
+                c.send_request("info", "south"),     # Down
+                c.send_request("info", "west"),      # Left
+                c.send_request("info", "east")]      # Right
+
+#If   [list of coordenates to goal] then the goal was found
+#Else [None] then the goal was not found
+path_to_goal = c.pesquisa_profundidade(5, path_to_goal)

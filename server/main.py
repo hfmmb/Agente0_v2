@@ -6,6 +6,7 @@ import random
 import tkinter as tk
 import time
 import traceback
+from server.__init__ import *
 
 coordenadas_player = [2,2]
 def initialize_obstacles(imageDir,list_obstacles):
@@ -14,7 +15,7 @@ def initialize_obstacles(imageDir,list_obstacles):
 
        ob = gb.Obstacle(imageDir,'ob'+str(i), obst[0], obst[1], 'obstacle'+str(i), False)
        board.add(ob, obst[0],obst[1])
-       i=i+1
+       i += 1
 
     # ob1 = gb.Obstacle('ob1', 0, 3, 'obstacle1', False)
     # board.add(ob1, 0, 3)
@@ -235,8 +236,8 @@ if __name__=="__main__":
         port=50000
 
     print("Starting the Game Board")
-    columns = 6
-    rows = 6
+    columns = BOARD_COLUMNS
+    rows = BOARD_ROWS
     root = tk.Tk()
     images_directory ='../images/'
     board = gb.GameBoard(root,rows, columns)

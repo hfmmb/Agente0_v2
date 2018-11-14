@@ -1,5 +1,5 @@
 """
-@autores: Helder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
+@autores: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
           João Pedro Moreira Sousa <joao.sousa201@gmail.com>;
           Leandro Jorge O. Branco;
 
@@ -12,7 +12,14 @@ Client-Server network arquiteture.
 ZeroMQ: http://zguide.zeromq.org/
 """
 
-from server_zmq import Server
+from server import game_board
+from server.server_zmq import Server
+from server import game_board
+import sys
+import random
+import tkinter
+import time
+import traceback
 
 s = Server()
 s.new_listener()

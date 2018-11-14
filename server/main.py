@@ -236,8 +236,8 @@ if __name__=="__main__":
         port=50000
 
     print("Starting the Game Board")
-    columns = BOARD_COLUMNS
-    rows = BOARD_ROWS
+    columns = CONST_BOARD_COLUMNS
+    rows = CONST_BOARD_ROWS
     root = tk.Tk()
     images_directory ='../images/'
     board = gb.GameBoard(root,rows, columns)

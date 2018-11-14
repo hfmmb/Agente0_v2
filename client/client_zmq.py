@@ -12,16 +12,24 @@ class Client:
         self.connected = socket
         pass
 
-    def send_request(self, request=None):
+    def send_request(self,request_header="info", request=None):
+        """
+        Sends a request\command to the server and waits for a reply.
+
+        :param request_header : string -> Contains the descriptor of the request <info; command; ...>
+        :param request : string -> Contains the command or message to send to the server <north; east; ...>
+        :return: reply -> Contains the reply that the server sent to the client, contents can vary.
+        """
         # Sending request to server
         print("Sending request...")
-        self.connected.send(b"Hello")
+        #self.connected.send(request_header+" "+ request)
+        self.connected.send_string(request_header + " " + request)
         # Reading the reply from server
         print("Waiting for reply...")
-        reply = self.connected.recv()
+        reply = self.connected.recv(2048)
         # Printing the reply
         print("Reply: ", reply)
-
+        return reply
 
     def pesquisa_profundidade(self, depth_of_search, lista_coordenadas_jogada):
         """
@@ -29,8 +37,8 @@ class Client:
         finds a path to the goal or exhausts all possible options.
         Uses an unweighted depth search algorithm as basis.
 
-        @:parameter depth_of_search : int -> Sets how much steps\plays ahead can the algorithm see in the world.
-        @:parameter lista_lista_coordenadas_jogada : list -> Coordinates of mother method to calculate.
+        @:param depth_of_search : int -> Sets how much steps\plays ahead can the algorithm see in the world.
+        @:param lista_lista_coordenadas_jogada : list -> Coordinates of mother method to calculate.
         @:returns lista_coordenadas_jogada : list -> Coordinates to goal on success, None on failure.
         """
         if depth_of_search > 0:

@@ -4,7 +4,7 @@ import random
 
 class Client:
 
-    def __init__(self, ip="83.132.205.201", port=50000):
+    def __init__(self, ip="127.0.0.1", port=50000):
         context = zmq.Context()
         print("Connecting to server...")
         socket = context.socket(zmq.REQ)

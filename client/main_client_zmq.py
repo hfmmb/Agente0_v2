@@ -33,7 +33,6 @@ c = Client()
 #path_to_goal = c.pesquisa_profundidade(5, path_to_goal)
 
 
-c = Client()
 random.seed()   # To become true random, a different seed is used! (clock time)
 
 def projeto_inicial():

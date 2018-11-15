@@ -1,5 +1,5 @@
 """
-@autores: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
+@authors: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
           João Pedro Moreira Sousa <joao.sousa201@gmail.com>;
           Leandro Jorge O. Branco;
 
@@ -7,31 +7,27 @@
 
 Creates a client server connection to send and receive commands with the help of the module ZeroMQ <pyzmq>, this method
 makes the connection more reliable and stable than doing it directly using sockets. This is the Server side of the
-Client-Server network arquiteture.
+Client-Server network architecture.
 
 ZeroMQ: http://zguide.zeromq.org/
 """
 
 from server.server_zmq import Server
 from server import game_board as gb
-import sys
 import random
 import tkinter as tk
-import time
-import traceback
 from server.__init__ import *
 
 s = Server()
-#s.new_listener()
 
 
-def initialize_obstacles(imageDir, list_obstacles):
+def initialize_obstacles(image_dir, list_obstacles):
     i = 1
-    for obst in list_obstacles:
+    for obstacle in list_obstacles:
 
-       ob = gb.Obstacle(imageDir,'ob'+str(i), obst[0], obst[1], 'obstacle'+str(i), False)
-       board.add(ob, obst[0],obst[1])
-       i += 1
+        ob = gb.Obstacle(image_dir, 'ob' + str(i), obstacle[0], obstacle[1], 'obstacle' + str(i), False)
+        board.add(ob, obstacle[0], obstacle[1])
+        i += 1
 
     # ob1 = gb.Obstacle('ob1', 0, 3, 'obstacle1', False)
     # board.add(ob1, 0, 3)
@@ -46,47 +42,49 @@ def initialize_obstacles(imageDir, list_obstacles):
     # ob6 = gb.Obstacle('ob6', 6, 6, 'obstacle1', False)
     # board.add(ob6, 6, 6)
 
-def initialize_goal(dirImage, pos):
-#    goal = gb.Goal('goal1', 10, 12, 'goal', False)
-#    board.add(goal, 10, 12)
-    goal = gb.Goal(dirImage, 'goal1', pos[0], pos[1], 'goal', False)
+
+def initialize_goal(dir_image, pos):
+    #    goal = gb.Goal('goal1', 10, 12, 'goal', False)
+    #    board.add(goal, 10, 12)
+    goal = gb.Goal(dir_image, 'goal1', pos[0], pos[1], 'goal', False)
     board.add(goal, pos[0], pos[1])
 
 
-def initialize_bomb(dirImage, list_bombs, rows, columns):
+def initialize_bomb(dir_image, list_bombs, rows, columns):
     i = 1
     for b in list_bombs:
-        bomb = gb.Bomb(dirImage, 'bomb'+str(i), b[0], b[1])
+        bomb = gb.Bomb(dir_image, 'bomb' + str(i), b[0], b[1])
         board.add(bomb, b[0], b[1])
         if b[0] >= rows - 1:
             new_b = 0
         else:
             new_b = b[0]+1
-        bomb_s = gb.BombSound(dirImage, 'bomb_sound_s'+str(i), new_b, b[1])
+        bomb_s = gb.BombSound(dir_image, 'bomb_sound_s' + str(i), new_b, b[1])
         board.add(bomb_s, new_b, b[1])
         if b[1] >= columns - 1:
             new_b = 0
         else:
             new_b = b[1]+1
-        bomb_s = gb.BombSound(dirImage, 'bomb_sound_e'+str(i), b[0], new_b)
+        bomb_s = gb.BombSound(dir_image, 'bomb_sound_e' + str(i), b[0], new_b)
         board.add(bomb_s, b[0], new_b)
         if b[0] <= 0:
             new_b = columns - 1
         else:
             new_b = b[0]-1
-        bomb_s = gb.BombSound(dirImage, 'bomb_sound_n'+str(i), new_b, b[1])
+        bomb_s = gb.BombSound(dir_image, 'bomb_sound_n' + str(i), new_b, b[1])
         board.add(bomb_s, new_b, b[1])
         if b[1] <= 0:
             new_b = rows - 1
         else:
             new_b = b[1]-1
 
-        bomb_s = gb.BombSound(dirImage, 'bomb_sound_w'+str(i), b[0], new_b)
+        bomb_s = gb.BombSound(dir_image, 'bomb_sound_w' + str(i), b[0], new_b)
         board.add(bomb_s, b[0], new_b)
         i = i + 1
 
-def initialize_weights(imageDir):
-    patch = [[0 for x in range(columns)] for x in range(rows)]
+
+def initialize_weights(image_dir):
+    patch = [[0 for x in range(CONST_BOARD_COLUMNS)] for x in range(CONST_BOARD_ROWS)]
     weight = 1.0
     name = ''
     for column in range(0, 16):
@@ -94,28 +92,25 @@ def initialize_weights(imageDir):
             res = random.uniform(0, 1.0)
             if res <= 0.3:
                 name = "patch_clear"
-                weight=1.0
+                weight = 1.0
             elif res <= 0.5:
-                weight = 1.1#2.0
+                weight = 1.1  # 2.0
                 name = "patch_lighter"
             elif res <= 0.7:
-                weight = 1.2 #4.0
+                weight = 1.2  # 4.0
                 name = "patch_middle"
             elif res <= 1.0:
-                weight = 1.3 #8.0
+                weight = 1.3  # 8.0
                 name = "patch_heavy"
-            patch[column][row] = gb.Patch(imageDir, 'patch' + str(column) + "-" + str(row), name, column, row, weight, False)
-            #print(res)
+            patch[column][row] = gb.Patch(image_dir, 'patch' + str(column) + "-" + str(row),
+                                          name, column, row, weight, False)
+            # print(res)
             board.add(patch[column][row], column, row)
+
+
 def loop():
-    #with s.connected as s:
-        #s.bind((host, port))
-        #while True:
+
             print("Listening...")
-            #s.listen()
-            #conn, addr = s.accept()
-            #with conn:
-            #    print('Connected by', addr)
             while True:
                     try:
                         data = s.connected.recv(1024)
@@ -124,159 +119,150 @@ def loop():
 
                         print(data.decode())
 
-                        type, value = data.decode().split()
+                        header, value = data.decode().split()
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
                         break
                     res = ""
-                    if type == 'command':
-                        #-----------------------
+                    if header == 'command':
+                        # -----------------------
                         # movements without considering the direction
                         # of the face of the object but testing the objects
-                        #-----------------------
+                        # -----------------------
                         if value == 'north':
-                            object.close_eyes()
-                            res = board.move_north(object, 'forward')
+                            agent.close_eyes()
+                            res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
-                                board.change_position(object, res[0], res[1])
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'south':
-                            object.close_eyes()
-                            res = board.move_south(object, 'forward')
+                            agent.close_eyes()
+                            res = board.move_south(agent, 'forward')
                             if not board.is_target_obstacle(res):
-                                board.change_position(object, res[0], res[1])
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'east':
-                            object.close_eyes()
-                            res = board.move_east(object, 'forward')
+                            agent.close_eyes()
+                            res = board.move_east(agent, 'forward')
                             if not board.is_target_obstacle(res):
-                                board.change_position(object, res[0], res[1])
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'west':
-                            object.close_eyes()
-                            res = board.move_west(object, 'forward')
+                            agent.close_eyes()
+                            res = board.move_west(agent, 'forward')
                             if not board.is_target_obstacle(res):
-                                board.change_position(object, res[0], res[1])
+                                board.change_position(agent, res[0], res[1])
 
-                        #-----------------------
+                        # -----------------------
                         # move to home
-                        #-----------------------
+                        # -----------------------
                         elif value == 'home':
-                            res = board.move_home(object)
+                            res = board.move_home(agent)
 
                         elif value == 'forward':
-                            res = board.move(object, 'forward')
+                            res = board.move(agent, 'forward')
 
                         elif value == 'left':
-                            res = board.turn_left(object)
+                            res = board.turn_left(agent)
 
                         elif value == 'right':
-                            res = board.turn_right(object)
+                            res = board.turn_right(agent)
 
-                        elif value =="set_steps":
-                            res=board.set_stepsview(object)
+                        elif value == "set_steps":
+                            res = board.set_stepsview(agent)
 
-                        elif value =="reset_steps":
-                            res=board.reset_stepsview(object)
+                        elif value == "reset_steps":
+                            res = board.reset_stepsview(agent)
 
-                        elif value =="open_eyes":
-                            res=object.open_eyes()
+                        elif value == "open_eyes":
+                            res = agent.open_eyes()
 
-                        elif value =="close_eyes":
-                            res=object.close_eyes()
-                        elif value=="clean_board":
+                        elif value == "close_eyes":
+                            res = agent.close_eyes()
+                        elif value == "clean_board":
                             res = board.clean_board()
-                        elif value == "bye" or value =="exit":
-                            conn.close()
+                        elif value == "bye" or value == "exit":
                             exit(1)
                         else:
                             pass
-                    elif type == 'info':
+                    elif header == 'info':
                         if value == 'direction':
-                            res = object.get_direction()
+                            res = agent.get_direction()
                         elif value == 'view':
-                            front = board.getplaceahead(object)
-                            res = board.view_object(object,front)
+                            front = board.getplaceahead(agent)
+                            res = board.view_object(agent, front)
                         elif value == "weights":
-                            res = board.view_weights(object,'front')
+                            res = board.view_weights(agent, 'front')
                         elif value == 'map':
-                            print('Map:',board.view_global_weights(object))
-                            res = board.view_global_weights(object)
+                            print('Map:', board.view_global_weights(agent))
+                            res = board.view_global_weights(agent)
                         elif value == 'obstacles':
-                            print('Obstacles:',board.view_obstacles(object))
-                            res = board.view_obstacles(object)
-                        elif value =='goal' or value=='target':
-                            res = board.getgoalposition(object)
-                            #print('Goal:',res)
-                        elif value =='position':
-                            res = (object.get_x(), object.get_y())
-                            #print('Position:', res)
-                        elif value=='maxcoord':
+                            print('Obstacles:', board.view_obstacles(agent))
+                            res = board.view_obstacles(agent)
+                        elif value == 'goal' or value == 'target':
+                            res = board.getgoalposition(agent)
+                            # print('Goal:',res)
+                        elif value == 'position':
+                            res = (agent.get_x(), agent.get_y())
+                            # print('Position:', res)
+                        elif value == 'maxcoord':
                             res = board.get_maxcoord()
-                            #print('MaxCoordinates:', res)
-                        elif value =='north':
-                            #View north
-                            front = board.getplacedir(object,'north')
-                            res = board.view_object(object,front)
-                        elif value =='south':
-                            #View north
-                            front = board.getplacedir(object,'south')
-                            res = board.view_object(object,front)
-                        elif value =='east':
-                            #View north
-                            front = board.getplacedir(object,'east')
-                            res = board.view_object(object,front)
-                        elif value =='west':
-                            #View north
-                            front = board.getplacedir(object,'west')
-                            res = board.view_object(object,front)
+                            # print('MaxCoordinates:', res)
+                        elif value == 'north':
+                            # View north
+                            front = board.getplacedir(agent, 'north')
+                            res = board.view_object(agent, front)
+                        elif value == 'south':
+                            # View north
+                            front = board.getplacedir(agent, 'south')
+                            res = board.view_object(agent, front)
+                        elif value == 'east':
+                            # View north
+                            front = board.getplacedir(agent, 'east')
+                            res = board.view_object(agent, front)
+                        elif value == 'west':
+                            # View north
+                            front = board.getplacedir(agent, 'west')
+                            res = board.view_object(agent, front)
 
                         else:
                             pass
                     if res != '':
                         return_data = str.encode(str(res))
                     else:
-                        return_data = str.encode("what? commands= <forward,left,right,set_steps,reset_steps, open_eyes, close_eyes> info=<direction,view,weights,map,goal,postion,obstacles,maxcoord>")
+                        return_data = str.encode(
+                            "what? "
+                            "commands = <forward, left, right, set_steps, reset_steps, open_eyes, close_eyes>"
+                            "info = <direction, view, weights, map, goal, position, obstacles, maxcoord>")
                     try:
                         s.connected.send(return_data)
                         root.update()
                     except BrokenPipeError as erro_excepcao:
                         print("Conexão interrompida com o cliente?", erro_excepcao)
 
-coordenadas_player = [2,2]
-if __name__=="__main__":
-    #Host and Port
-    if len(sys.argv) == 3:
-        host, port = sys.argv[1], int(sys.argv[2])
-    else:
-        host='127.0.0.1'
-        port=50000
+
+player_coordinates = [2, 2]
+if __name__ == "__main__":
 
     print("Starting the Game Board")
-    columns = CONST_BOARD_COLUMNS
-    rows = CONST_BOARD_ROWS
+
     root = tk.Tk()
-    images_directory ='../images/'
-    board = gb.GameBoard(root,rows, columns)
+    board = gb.GameBoard(root, CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
     # BOARD BOARD:
-    initialize_obstacles(images_directory,[(3,4),(4,4),(1,4)])
-    initialize_goal(images_directory,(3,5))
-    initialize_bomb(images_directory,[],rows,columns)
-    #initialize_weights(images_directory)
+    initialize_obstacles(CONST_IMAGE_DIR, [(3, 4), (4, 4), (1, 4)])
+    initialize_goal(CONST_IMAGE_DIR, (3, 5))
+    initialize_bomb(CONST_IMAGE_DIR, [], CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
+    # initialize_weights(CONST_IMAGE_DIR)
     root.update()
-    # SERVER SERVER:
-    #Starting server
-    print("Starting the server!")
-    server = s
     # PLAYER PLAYER:
-    #Initialize player
-    object = gb.Player(images_directory,'player', coordenadas_player[0], coordenadas_player[1], 'south', 'front', True)
-    object.set_home((coordenadas_player[0], coordenadas_player[1]))
-    object.close_eyes()
-    #Add player
-    board.add(object, coordenadas_player[0], coordenadas_player[1])
+    # Initialize player
+    agent = gb.Player(CONST_IMAGE_DIR, 'player', player_coordinates[0], player_coordinates[1], 'south', 'front', True)
+    agent.set_home((player_coordinates[0], player_coordinates[1]))
+    agent.close_eyes()
+    # Add player
+    board.add(agent, player_coordinates[0], player_coordinates[1])
     root.update()
 
-    #Loop
+    # Loop
     loop()

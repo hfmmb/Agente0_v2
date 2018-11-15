@@ -22,7 +22,7 @@ class Client:
         """
         # Sending request to server
         print("Sending request...")
-        #self.connected.send(request_header+" "+ request)
+        # self.connected.send(request_header+" "+ request)
         self.connected.send_string(request_header + " " + request)
         # Reading the reply from server
         print("Waiting for reply...")

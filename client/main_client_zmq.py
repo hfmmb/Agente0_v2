@@ -1,7 +1,7 @@
 """
 @autores: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
           João Pedro Moreira Sousa <joao.sousa201@gmail.com>;
-          Leandro Jorge O. Branco;
+          Leandro Jorge O. Branco <branco.leandro23@gmail.com>;
 
 @since: 12/11/2018
 
@@ -379,6 +379,4 @@ x = 0
 while x <40:
     c.execute("command", "east")
     x = x + 1
-
-
 '''

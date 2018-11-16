@@ -1,7 +1,7 @@
 """
 @authors: Hélder Filipe M. de M. Braga <helderbraga.work@gmail.com>;
           João Pedro Moreira Sousa <joao.sousa201@gmail.com>;
-          Leandro Jorge O. Branco;
+          Leandro Jorge O. Branco <branco.leandro23@gmail.com>;
 
 @since: 12/11/2018
 

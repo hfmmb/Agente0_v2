@@ -241,30 +241,29 @@ def trepa_colinas():
                     if posicao_inicial_int[0] != goal[0]:
                         print("ENTROU X")
                         if posicao_inicial_int[0] > goal[0]:
-                            if lista_de_possibilidades[3] == ("['obstacle']"):
+                            if lista_de_possibilidades[2] == ("['obstacle']"):
                                 print("obstaculo a frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
                                             posicao_inicial_int[0] += 1
                                             c.execute("command", "east")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[0] != ("['obstacle']"):
+                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
                                             posicao_inicial_int[1] -= 1
                                             c.execute("command", "north")
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
                                             posicao_inicial_int[1] += 1
                                             c.execute("command", "south")
 
 
                                     contador_tentativas = 0
-                                posicao_inicial_int[0] -= 1
                             elif lista_de_possibilidades[3] == ("['bomb']"):
                                 print("bomba a frente")
                             else:
@@ -273,24 +272,24 @@ def trepa_colinas():
 
 
                         if posicao_inicial_int[0] < goal[0]:
-                            if lista_de_possibilidades[2] == ("['obstacle']"):
+                            if lista_de_possibilidades[3] == ("['obstacle']"):
                                 print("obstaculo a frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
                                             posicao_inicial_int[0] -= 1
                                             c.execute("command", "west")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[0] != ("['obstacle']"):
+                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
                                             posicao_inicial_int[1] -= 1
                                             c.execute("command", "north")
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
                                             posicao_inicial_int[1] += 1
                                             c.execute("command", "south")
 
@@ -311,18 +310,18 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
                                             posicao_inicial_int[0] -= 1
                                             c.execute("command", "west")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
                                             posicao_inicial_int[0] += 1
                                             c.execute("command", "east")
 
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
                                             posicao_inicial_int[1] += 1
                                             c.execute("command", "south")
 
@@ -342,20 +341,20 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0,2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
                                             posicao_inicial_int[0] -= 1
                                             c.execute("command", "west")
 
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
                                             posicao_inicial_int[0] += 1
                                             c.execute("command", "east")
 
 
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[0] != ("['obstacle']"):
+                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
                                             posicao_inicial_int[1] -= 1
                                             c.execute("command", "north")
 

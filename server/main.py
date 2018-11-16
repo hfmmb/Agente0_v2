@@ -8,7 +8,7 @@ import time
 import traceback
 from server.__init__ import *
 
-coordenadas_player = [2,2]
+coordenadas_player = [0,2]
 def initialize_obstacles(imageDir,list_obstacles):
     i = 1
     for obst in list_obstacles:
@@ -243,8 +243,8 @@ if __name__=="__main__":
     board = gb.GameBoard(root,rows, columns)
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
     # BOARD BOARD:
-    initialize_obstacles(images_directory,[(3,4),(4,5),(2,4),(1,4)])
-    initialize_goal(images_directory,(3,5))
+    initialize_obstacles(images_directory,[(3,2),(3,3),(3,4)])
+    initialize_goal(images_directory,(5,2))
     initialize_bomb(images_directory,[],rows,columns)
     #initialize_weights(images_directory)
     root.update()

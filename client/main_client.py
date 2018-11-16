@@ -248,16 +248,19 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        posicao_inicial_int[0] += 1
-                                        c.execute("command", "east")
+                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                            posicao_inicial_int[0] += 1
+                                            c.execute("command", "east")
 
                                     elif rand == 1:
-                                        posicao_inicial_int[1] -= 1
-                                        c.execute("command", "north")
+                                        if lista_de_possibilidades[0] != ("['obstacle']"):
+                                            posicao_inicial_int[1] -= 1
+                                            c.execute("command", "north")
 
                                     elif rand == 2:
-                                        posicao_inicial_int[1] += 1
-                                        c.execute("command", "south")
+                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                            posicao_inicial_int[1] += 1
+                                            c.execute("command", "south")
 
 
                                     contador_tentativas = 0
@@ -277,17 +280,19 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-
-                                        posicao_inicial_int[0] -= 1
-                                        c.execute("command", "west")
+                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                            posicao_inicial_int[0] -= 1
+                                            c.execute("command", "west")
 
                                     elif rand == 1:
-                                        posicao_inicial_int[1] -= 1
-                                        c.execute("command", "north")
+                                        if lista_de_possibilidades[0] != ("['obstacle']"):
+                                            posicao_inicial_int[1] -= 1
+                                            c.execute("command", "north")
 
                                     elif rand == 2:
-                                        posicao_inicial_int[1] += 1
-                                        c.execute("command", "south")
+                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                            posicao_inicial_int[1] += 1
+                                            c.execute("command", "south")
 
 
                                     contador_tentativas = 0
@@ -306,18 +311,20 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-
-                                        posicao_inicial_int[0] -= 1
-                                        c.execute("command", "west")
+                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                            posicao_inicial_int[0] -= 1
+                                            c.execute("command", "west")
 
                                     elif rand == 1:
-                                        posicao_inicial_int[0] += 1
-                                        c.execute("command", "east")
+                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                            posicao_inicial_int[0] += 1
+                                            c.execute("command", "east")
 
 
                                     elif rand == 2:
-                                        posicao_inicial_int[1] += 1
-                                        c.execute("command", "south")
+                                        if lista_de_possibilidades[1] != ("['obstacle']"):
+                                            posicao_inicial_int[1] += 1
+                                            c.execute("command", "south")
 
 
                                     contador_tentativas = 0
@@ -335,18 +342,20 @@ def trepa_colinas():
                                     print("entrei")
                                     rand = random.randint(0,2)
                                     if rand == 0:
-
-                                        posicao_inicial_int[0] -= 1
-                                        c.execute("command", "west")
+                                        if lista_de_possibilidades[2] != ("['obstacle']"):
+                                            posicao_inicial_int[0] -= 1
+                                            c.execute("command", "west")
 
 
                                     elif rand == 1:
-                                        posicao_inicial_int[0] += 1
-                                        c.execute("command", "east")
+                                        if lista_de_possibilidades[3] != ("['obstacle']"):
+                                            posicao_inicial_int[0] += 1
+                                            c.execute("command", "east")
 
 
 
                                     elif rand == 2:
+                                        if lista_de_possibilidades[0] != ("['obstacle']"):
                                             posicao_inicial_int[1] -= 1
                                             c.execute("command", "north")
 
@@ -359,6 +368,10 @@ def trepa_colinas():
                                 c.execute("command", "south")
                                 posicao_inicial_int[1] += 1
                             print("POSICAO: ", posicao_inicial_int)
+                print("--------------")
+                print(posicao_inicial_int)
+                print(goal)
+                print("--------------")
 
 
 
@@ -367,10 +380,6 @@ def trepa_colinas():
             except ConnectionError as excepcao_erro:
                 print("Server ligado?",excepcao_erro)
 
-        print("--------------")
-        print(posicao_inicial_int)
-        print(goal)
-        print("--------------")
 
         messagebox.showinfo("Vitoria", "Goal Archieved")
 

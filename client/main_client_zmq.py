@@ -13,10 +13,8 @@ ZeroMQ: http://zguide.zeromq.org/
 """
 
 from client_zmq import Client
-import ast
 import random
 from tkinter import messagebox
-import time
 from server.__init__ import *
 
 c = Client()
@@ -30,9 +28,6 @@ c = Client()
 # If   [list of coordenates to goal] then the goal was found
 # Else [None] then the goal was not found
 # path_to_goal = c.pesquisa_profundidade(5, path_to_goal)
-
-
-random.seed()   # To become true random, a different seed is used! (clock time)
 
 
 def initial_project():
@@ -236,156 +231,177 @@ def trepa_colinas():
 
         contador_tentativas = 0
         goal_raw = c.send_request("info", "goal")
-        goal = [int(goal_raw[1]), int(goal_raw[4])]
-        posicao_inicial_str = c.send_request("info", "position")
-        posicao_inicial_int = [int(posicao_inicial_str[1]), int(posicao_inicial_str[4])]
-        print("--------------")
-        print(posicao_inicial_int)
-        print(goal)
-        print("--------------")
+        coord_x = goal_raw.decode()  # Getting the numbers only
+        coord_y = coord_x[4]  # Store coordinate y
+        coord_x = coord_x[1]  # Store coordinate x
+        goal = [int(coord_x), int(coord_y)]  # Store in goal after conversion to integer
 
-        while not(posicao_inicial_int[0] == goal[0] and posicao_inicial_int[1] == goal[1]):
+        posicao_inicial_raw = c.send_request("info", "position")
+        coord_x = posicao_inicial_raw.decode()
+        coord_y = coord_x[4]  # Store coordinate y
+        coord_x = coord_x[1]  # Store coordinate x
+        starting_position = [int(coord_x), int(coord_y)]
+
+        while not(starting_position[0] == goal[0] and starting_position[1] == goal[1]):
 
             try:
+                possibility_list = []
+                #NORTH
+                requested_data = c.send_request("info", "north")
+                coord_x = requested_data.decode()
+                print("Requested data: ", requested_data)
+                print("Coord x: ", coord_x)
+                exit()
+                coord_y = coord_x[4]
+                coord_x = coord_x[1]
 
-                lista_de_possibilidades = [c.send_request("info", "north"),
-                                           c.send_request("info", "south"),
-                                           c.send_request("info", "west"),
-                                           c.send_request("info", "east")]
+                possibility_list.append(coord_x, coord_y)
 
-                print(lista_de_possibilidades)
-                aleatorio = random.randint(0, 1)
-                if aleatorio == 0:
-                    if posicao_inicial_int[0] != goal[0]:
-                        print("ENTROU X")
-                        if posicao_inicial_int[0] > goal[0]:
-                            if lista_de_possibilidades[2] == ("['obstacle']"):
-                                print("obstaculo a frente")
+                #SOUTH
+                requested_data = c.send_request("info", "south")
+                coord_x = requested_data.decode()
+                coord_y = coord_x[4]
+                coord_x = coord_x[1]
+                possibility_list.append(coord_x, coord_y)
+                #EAST
+                requested_data = c.send_request("info", "east")
+                coord_x = requested_data.decode()
+                coord_y = coord_x[4]
+                coord_x = coord_x[1]
+                possibility_list.append(coord_x, coord_y)
+                #WEST
+                requested_data = c.send_request("info", "west")
+                coord_x = requested_data.decode()
+                coord_y = coord_x[4]
+                coord_x = coord_x[1]
+                possibility_list.append(coord_x, coord_y)
+
+                print("Possibilidades movimento: ",possibility_list)
+                generated_random_number = random.randint(0, 1)
+                if generated_random_number == 0:
+                    if starting_position[0] != goal[0]:
+                        if starting_position[0] > goal[0]:
+                            if possibility_list[2] == ("['obstacle']"):
+                                print("Obstáculo à frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
-                                    print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
-                                            posicao_inicial_int[0] += 1
+                                        if possibility_list[3] != ("['obstacle']") and starting_position[0] <= 4:
+                                            starting_position[0] += 1
                                             c.send_request("command", "east")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
-                                            posicao_inicial_int[1] -= 1
+                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] >= 1:
+                                            starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
-                                            posicao_inicial_int[1] += 1
+                                        if possibility_list[1] != ("['obstacle']") and starting_position[1] <= 4:
+                                            starting_position[1] += 1
                                             c.send_request("command", "south")
 
                                     contador_tentativas = 0
-                            elif lista_de_possibilidades[3] == ("['bomb']"):
-                                print("bomba a frente")
+                            elif possibility_list[3] == ("['bomb']"):
+                                print("Bomba à frente")
                             else:
                                 c.send_request("command", "west")
-                                posicao_inicial_int[0] -= 1
+                                starting_position[0] -= 1
 
-                        if posicao_inicial_int[0] < goal[0]:
-                            if lista_de_possibilidades[3] == ("['obstacle']"):
-                                print("obstaculo a frente")
+                        if starting_position[0] < goal[0]:
+                            if possibility_list[3] == ("['obstacle']"):
+                                print("Obstaculo à frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
-                                    print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
-                                            posicao_inicial_int[0] -= 1
+                                        if possibility_list[2] != ("['obstacle']") and starting_position[0] >= 1:
+                                            starting_position[0] -= 1
                                             c.send_request("command", "west")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
-                                            posicao_inicial_int[1] -= 1
+                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] >= 1:
+                                            starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
-                                            posicao_inicial_int[1] += 1
+                                        if possibility_list[1] != ("['obstacle']") and starting_position[1] <= 4:
+                                            starting_position[1] += 1
                                             c.send_request("command", "south")
 
                                     contador_tentativas = 0
-                            elif lista_de_possibilidades[2] == ("['bomb']"):
-                                print("bomba a frente")
+                            elif possibility_list[2] == ("['bomb']"):
+                                print("Bomba à frente")
                             else:
                                 c.send_request("command", "east")
-                                posicao_inicial_int[0] += 1
-                elif aleatorio == 1:
-                    if posicao_inicial_int[1] != goal[1]:
-                        if posicao_inicial_int[1] > goal[1]:
-                            if lista_de_possibilidades[0] == ("['obstacle']"):
+                                starting_position[0] += 1
+                elif generated_random_number == 1:
+                    if starting_position[1] != goal[1]:
+                        if starting_position[1] > goal[1]:
+                            if possibility_list[0] == ("['obstacle']"):
                                 print("obstaculo a frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
-                                            posicao_inicial_int[0] -= 1
+                                        if possibility_list[2] != ("['obstacle']") and starting_position[0] >= 1:
+                                            starting_position[0] -= 1
                                             c.send_request("command", "west")
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
-                                            posicao_inicial_int[0] += 1
+                                        if possibility_list[3] != ("['obstacle']") and starting_position[0] <= 4:
+                                            starting_position[0] += 1
                                             c.send_request("command", "east")
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[1] != ("['obstacle']") and posicao_inicial_int[1] <= 4:
-                                            posicao_inicial_int[1] += 1
+                                        if possibility_list[1] != ("['obstacle']") and starting_position[1] <= 4:
+                                            starting_position[1] += 1
                                             c.send_request("command", "south")
 
                                     contador_tentativas = 0
-                            elif lista_de_possibilidades[0] == ("['bomb']"):
+                            elif possibility_list[0] == ("['bomb']"):
                                 print("bomba a frente")
                             else:
                                 c.execute("command", "north")
-                                posicao_inicial_int[1] -= 1
+                                starting_position[1] -= 1
 
-                        if posicao_inicial_int[1] < goal[1]:
-                            if lista_de_possibilidades[1] == ("['obstacle']"):
+                        if starting_position[1] < goal[1]:
+                            if possibility_list[1] == ("['obstacle']"):
                                 print("obstaculo a frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
                                     print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if lista_de_possibilidades[2] != ("['obstacle']") and posicao_inicial_int[0] >= 1:
-                                            posicao_inicial_int[0] -= 1
+                                        if possibility_list[2] != ("['obstacle']") and starting_position[0] >= 1:
+                                            starting_position[0] -= 1
                                             c.send_request("command", "west")
 
 
                                     elif rand == 1:
-                                        if lista_de_possibilidades[3] != ("['obstacle']") and posicao_inicial_int[0] <= 4:
-                                            posicao_inicial_int[0] += 1
+                                        if possibility_list[3] != ("['obstacle']") and starting_position[0] <= 4:
+                                            starting_position[0] += 1
                                             c.send_request("command", "east")
 
 
 
                                     elif rand == 2:
-                                        if lista_de_possibilidades[0] != ("['obstacle']") and posicao_inicial_int[1] >= 1:
-                                            posicao_inicial_int[1] -= 1
+                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] >= 1:
+                                            starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     contador_tentativas = 0
-                            elif lista_de_possibilidades[1] == ("['bomb']"):
+                            elif possibility_list[1] == ("['bomb']"):
                                 print("bomba a frente")
                             else:
                                 c.send_request("command", "south")
-                                posicao_inicial_int[1] += 1
-                            print("POSICAO: ", posicao_inicial_int)
+                                starting_position[1] += 1
+                            print("POSICAO: ", starting_position)
                 print("--------------")
-                print(posicao_inicial_int)
+                print(starting_position)
                 print(goal)
                 print("--------------")
-
-
-
-
 
             except ConnectionError as excepcao_erro:
                 print("Server ligado?", excepcao_erro)

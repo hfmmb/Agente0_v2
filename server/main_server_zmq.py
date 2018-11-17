@@ -48,6 +48,8 @@ def initialize_goal(dir_image, pos):
     #    board.add(goal, 10, 12)
     goal = gb.Goal(dir_image, 'goal1', pos[0], pos[1], 'goal', False)
     board.add(goal, pos[0], pos[1])
+    # print(pos[0],pos[1])
+
 
 
 def initialize_bomb(dir_image, list_bombs, rows, columns):
@@ -114,12 +116,9 @@ def loop():
             while True:
                     try:
                         data = s.connected.recv(1024)
-                        #                    if not data:
-                        #                        break
-
-                        print(data.decode())
 
                         header, value = data.decode().split()
+
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
                         break
@@ -134,6 +133,7 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
+
 
                         elif value == 'south':
                             agent.close_eyes()
@@ -185,6 +185,7 @@ def loop():
                             exit(1)
                         else:
                             pass
+                        print("Header: ", header)
                     elif header == 'info':
                         if value == 'direction':
                             res = agent.get_direction()
@@ -212,23 +213,29 @@ def loop():
                             # View north
                             front = board.getplacedir(agent, 'north')
                             res = board.view_object(agent, front)
+                            print("NORTH: ", res)
                         elif value == 'south':
                             # View north
                             front = board.getplacedir(agent, 'south')
                             res = board.view_object(agent, front)
+                            print("SOUTH: ", res)
                         elif value == 'east':
                             # View north
                             front = board.getplacedir(agent, 'east')
                             res = board.view_object(agent, front)
+                            print("EAST: ", res)
                         elif value == 'west':
                             # View north
                             front = board.getplacedir(agent, 'west')
                             res = board.view_object(agent, front)
+                            print("WEST: ", res)
 
                         else:
                             pass
                     if res != '':
+                        print("Res: ",res)
                         return_data = str.encode(str(res))
+                        print("data: ", return_data)
                     else:
                         return_data = str.encode(
                             "what? "
@@ -241,7 +248,7 @@ def loop():
                         print("Conexão interrompida com o cliente?", erro_excepcao)
 
 
-player_coordinates = [2, 2]
+player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
 if __name__ == "__main__":
 
     print("Starting the Game Board")
@@ -251,7 +258,7 @@ if __name__ == "__main__":
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
     # BOARD BOARD:
     initialize_obstacles(CONST_IMAGE_DIR, [(3, 4), (4, 4), (1, 4)])
-    initialize_goal(CONST_IMAGE_DIR, (3, 5))
+    initialize_goal(CONST_IMAGE_DIR, (CONST_GOAL_COORD_X, CONST_GOAL_COORD_Y))
     initialize_bomb(CONST_IMAGE_DIR, [], CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
     # initialize_weights(CONST_IMAGE_DIR)
     root.update()

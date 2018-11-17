@@ -63,9 +63,9 @@ class Object:
 
         return self.name
 
-    def set_home(self,home):
+    def set_home(self, home):
 
-        self.home=home
+        self.home = home
 
     def get_home(self):
 
@@ -420,7 +420,7 @@ class GameBoard(tk.Frame):
         self.place(object, object.get_x(), object.get_y())
         return "east"
 
-    def turn_west(self,object):
+    def turn_west(self, object):
         (nx,ny)=self.getplaceahead(object)
         self.remove_viewscreen(object, nx, ny)
         object.set_direction("west")
@@ -544,7 +544,7 @@ class GameBoard(tk.Frame):
     # ------------------------------------------------
     # MOVE_HOME ()
     # ------------------------------------------------
-    def move_home(self,object):
+    def move_home(self, object):
         home = object.get_home()
         self.place(object,home[0],home[1])
     # ------------------------------------------------
@@ -642,7 +642,6 @@ class GameBoard(tk.Frame):
             if isinstance(ag, Obstacle):
                 obstacles[ag.get_x()][ag.get_y()] = 1
         return obstacles
-
 
     def refresh(self, event):
         '''Redraw the board, possibly in response to window being resized'''

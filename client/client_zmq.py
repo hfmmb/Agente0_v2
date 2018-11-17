@@ -1,5 +1,6 @@
 import zmq
 import random
+from project_commons import *
 
 
 class Client:
@@ -12,7 +13,7 @@ class Client:
         self.connected = socket
         pass
 
-    def send_request(self,request_header="info", request=None):
+    def send_request(self, request_header="info", request=None):
         """
         Sends a request\command to the server and waits for a reply.
 
@@ -26,27 +27,27 @@ class Client:
         self.connected.send_string(request_header + " " + request)
         # Reading the reply from server
         print("Waiting for reply...")
-        reply = self.connected.recv(2048)
+        reply = self.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
         # Printing the reply
-        print("Reply: ", reply)
+        print("Reply from server: ", reply)
         return reply
 
-    def pesquisa_profundidade(self, depth_of_search, lista_coordenadas_jogada):
+    def depth_search(self, depth_of_search, list_coordinates_play):
         """
         Recursively calls itself until it reaches the given depth,
         finds a path to the goal or exhausts all possible options.
         Uses an unweighted depth search algorithm as basis.
 
         @:param depth_of_search : int -> Sets how much steps\plays ahead can the algorithm see in the world.
-        @:param lista_lista_coordenadas_jogada : list -> Coordinates of mother method to calculate.
-        @:returns lista_coordenadas_jogada : list -> Coordinates to goal on success, None on failure.
+        @:param list_coordinates_play : list -> Coordinates of mother method to calculate.
+        @:returns list_coordinates_play : list -> Coordinates to goal on success, None on failure.
         """
         if depth_of_search > 0:
             depth_of_search -= 1
             while True:
-                if len(lista_coordenadas_jogada > 0):
-                    random_index = random.randrange(0, len(lista_coordenadas_jogada))
-                    return self.pesquisa_profundidade(depth_of_search, lista_coordenadas_jogada)
+                if len(list_coordinates_play > 0):
+                    random_index = random.randrange(0, len(list_coordinates_play))
+                    return self.depth_search(depth_of_search, list_coordinates_play)
 
                 else:
                     return None

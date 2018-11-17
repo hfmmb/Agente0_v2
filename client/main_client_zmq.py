@@ -261,7 +261,7 @@ def trepa_colinas():
                 #SOUTH
                 requested_data = c.send_request("info", "south")
                 coord_x = requested_data.decode()
-                if len(coord_x>2):
+                if len(coord_x)>2:
                     coord_y = coord_x[4]
                     coord_x = coord_x[1]
                     possibility_list.append([coord_x, coord_y])
@@ -270,14 +270,14 @@ def trepa_colinas():
                 requested_data = c.send_request("info", "east")
                 coord_x = requested_data.decode()
 
-                if len(coord_x>2):
+                if len(coord_x)>2:
                     coord_y = coord_x[4]
                     coord_x = coord_x[1]
                     possibility_list.append([coord_x, coord_y])
                 #WEST
                 requested_data = c.send_request("info", "west")
                 coord_x = requested_data.decode()
-                if len(coord_x>2):
+                if len(coord_x)>2:
                     coord_y = coord_x[4]
                     coord_x = coord_x[1]
                     possibility_list.append([coord_x, coord_y])

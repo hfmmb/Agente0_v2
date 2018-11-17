@@ -248,35 +248,39 @@ def trepa_colinas():
                 possibility_list = []
                 #NORTH
                 requested_data = c.send_request("info", "north")
-                coord_x = requested_data.decode()
-                print("Requested data: ", requested_data)
-                print("Coord x: ", coord_x)
-                exit()
-                coord_y = coord_x[4]
-                coord_x = coord_x[1]
-
-                possibility_list.append(coord_x, coord_y)
+                if len(requested_data)>0:
+                    coord_x = requested_data.decode()
+                    print("Requested data: ", requested_data)
+                    print("Coord x: ", coord_x)
+                    #exit()
+                    coord_y = coord_x[4]
+                    coord_x = coord_x[1]
+                    possibility_list.append([coord_x, coord_y])
 
                 #SOUTH
                 requested_data = c.send_request("info", "south")
-                coord_x = requested_data.decode()
-                coord_y = coord_x[4]
-                coord_x = coord_x[1]
-                possibility_list.append(coord_x, coord_y)
+
+                if len(requested_data>0):
+                    coord_x = requested_data.decode()
+                    coord_y = coord_x[4]
+                    coord_x = coord_x[1]
+                    possibility_list.append([coord_x, coord_y])
                 #EAST
                 requested_data = c.send_request("info", "east")
-                coord_x = requested_data.decode()
-                coord_y = coord_x[4]
-                coord_x = coord_x[1]
-                possibility_list.append(coord_x, coord_y)
+                if len(requested_data>0):
+                    coord_x = requested_data.decode()
+                    coord_y = coord_x[4]
+                    coord_x = coord_x[1]
+                    possibility_list.append([coord_x, coord_y])
                 #WEST
                 requested_data = c.send_request("info", "west")
-                coord_x = requested_data.decode()
-                coord_y = coord_x[4]
-                coord_x = coord_x[1]
-                possibility_list.append(coord_x, coord_y)
+                if len(requested_data>0):
+                    coord_x = requested_data.decode()
+                    coord_y = coord_x[4]
+                    coord_x = coord_x[1]
+                    possibility_list.append([coord_x, coord_y])
 
-                print("Possibilidades movimento: ",possibility_list)
+                print("Possibilidades movimento: ", possibility_list)
                 generated_random_number = random.randint(0, 1)
                 if generated_random_number == 0:
                     if starting_position[0] != goal[0]:

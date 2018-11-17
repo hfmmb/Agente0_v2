@@ -601,15 +601,15 @@ class GameBoard(tk.Frame):
         for ag in self.objects:
             if (ag.get_x() == coordinates[0] and ag.get_y() == coordinates[1]):
                 print('There is something in postion:', coordinates)
-                if isinstance(ag,Player):
+                if isinstance(ag, Player):
                     res.append('player')
-                elif isinstance(ag,Bomb):
+                elif isinstance(ag, Bomb):
                     res.append('bomb')
-                elif isinstance(ag,BombSound):
+                elif isinstance(ag, BombSound):
                     res.append('bomb_sound')
-                elif isinstance(ag,Obstacle):
+                elif isinstance(ag ,Obstacle):
                     res.append('obstacle')
-                elif isinstance(ag,Goal):
+                elif isinstance(ag, Goal):
                     res.append('goal')
                 else:
                     res.append('unkown')

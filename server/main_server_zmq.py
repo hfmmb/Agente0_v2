@@ -17,6 +17,7 @@ from server import game_board as gb
 import random
 import tkinter as tk
 from server.__init__ import *
+from project_commons import *
 
 s = Server()
 
@@ -115,9 +116,9 @@ def loop():
             print("Listening...")
             while True:
                     try:
-                        data = s.connected.recv(1024)
-
+                        data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
                         header, value = data.decode().split()
+                        print("Header: ",header,"Value:", value)
 
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
@@ -133,7 +134,7 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-
+                                print("Res NORTH:",res)
 
                         elif value == 'south':
                             agent.close_eyes()
@@ -185,7 +186,6 @@ def loop():
                             exit(1)
                         else:
                             pass
-                        print("Header: ", header)
                     elif header == 'info':
                         if value == 'direction':
                             res = agent.get_direction()

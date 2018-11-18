@@ -8,5 +8,5 @@ CONST_BOARD_COLUMNS = 6  # Total of columns in the world
 CONST_IMAGE_DIR = '../images/'  # Path to image directory
 CONST_PLAYER_COORD_X = 2
 CONST_PLAYER_COORD_Y = 2
-CONST_GOAL_COORD_X = 3
-CONST_GOAL_COORD_Y = 5
+CONST_GOAL_COORD_X = 0
+CONST_GOAL_COORD_Y = 0

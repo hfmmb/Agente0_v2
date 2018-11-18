@@ -391,7 +391,7 @@ def trepa_colinas():
                             elif possibility_list[0] == "['bomb']":
                                 print("bomba a frente")
                             else:
-                                c.execute("command", "north")
+                                c.send_request("command", "north")
                                 starting_position[1] -= 1
 
                         if starting_position[1] < goal[1]:

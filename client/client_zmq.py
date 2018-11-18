@@ -35,7 +35,7 @@ class Client:
         reply = self.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
         # Printing the reply
         print("Reply from server: ", reply)
-        time.sleep(0.1)
+        time.sleep(0.05)
         return reply
 
     def depth_search(self, depth_of_search, list_coordinates_play):

@@ -1,5 +1,6 @@
 import zmq
 import random
+import time
 from project_commons import *
 
 
@@ -10,10 +11,11 @@ class Client:
         print("Connecting to server...")
         socket = context.socket(zmq.REQ)
         socket.connect("tcp://" + ip + ":" + str(port))
+        #socket.connect("tcp://*:"+str(port))
         self.connected = socket
         pass
 
-    def send_request(self, request_header="info", request=None):
+    def send_request(self, request_header="info", request="south"):
         """
         Sends a request\command to the server and waits for a reply.
 
@@ -25,11 +27,15 @@ class Client:
         print("Sending request...")
         # self.connected.send(request_header+" "+ request)
         self.connected.send_string(request_header + " " + request)
+        #request = request_header+request
+        #self.connected.send_unicode(request_header + " " + request)
+        #self.connected.send(request_header,request)
         # Reading the reply from server
         print("Waiting for reply...")
         reply = self.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
         # Printing the reply
         print("Reply from server: ", reply)
+        time.sleep(0.1)
         return reply
 
     def depth_search(self, depth_of_search, list_coordinates_play):

@@ -52,7 +52,6 @@ def initialize_goal(dir_image, pos):
     # print(pos[0],pos[1])
 
 
-
 def initialize_bomb(dir_image, list_bombs, rows, columns):
     i = 1
     for b in list_bombs:
@@ -123,7 +122,7 @@ def loop():
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
                         break
-                    res = ""
+                    res = ''
                     if header == 'command':
                         # -----------------------
                         # movements without considering the direction
@@ -134,7 +133,6 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-                                print("Res NORTH:",res)
 
                         elif value == 'south':
                             agent.close_eyes()
@@ -212,24 +210,34 @@ def loop():
                         elif value == 'north':
                             # View north
                             front = board.getplacedir(agent, 'north')
+                            print("Front: ",front, res)
                             res = board.view_object(agent, front)
+                            print("Front after:",front)
                             print("NORTH: ", res)
+                            #res = front
                         elif value == 'south':
                             # View north
                             front = board.getplacedir(agent, 'south')
                             res = board.view_object(agent, front)
                             print("SOUTH: ", res)
+                            print("Front after:",front)
+                            #res = front
                         elif value == 'east':
                             # View north
                             front = board.getplacedir(agent, 'east')
                             res = board.view_object(agent, front)
                             print("EAST: ", res)
+
+                            print("Front after:",front)
+                            #res = front
                         elif value == 'west':
                             # View north
                             front = board.getplacedir(agent, 'west')
                             res = board.view_object(agent, front)
                             print("WEST: ", res)
 
+                            print("Front after:",front)
+                            #res = front
                         else:
                             pass
                     if res != '':
@@ -241,11 +249,8 @@ def loop():
                             "what? "
                             "commands = <forward, left, right, set_steps, reset_steps, open_eyes, close_eyes>"
                             "info = <direction, view, weights, map, goal, position, obstacles, maxcoord>")
-                    try:
-                        s.connected.send(return_data)
-                        root.update()
-                    except BrokenPipeError as erro_excepcao:
-                        print("Conexão interrompida com o cliente?", erro_excepcao)
+                    s.connected.send(return_data)
+                    root.update()
 
 
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]

@@ -262,7 +262,7 @@ if __name__ == "__main__":
     board = gb.GameBoard(root, CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
     # BOARD BOARD:
-    initialize_obstacles(CONST_IMAGE_DIR, [(3, 4), (4, 4), (1, 4)])
+    initialize_obstacles(CONST_IMAGE_DIR, [])
     initialize_goal(CONST_IMAGE_DIR, (CONST_GOAL_COORD_X, CONST_GOAL_COORD_Y))
     initialize_bomb(CONST_IMAGE_DIR, [], CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
     # initialize_weights(CONST_IMAGE_DIR)

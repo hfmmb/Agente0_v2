@@ -435,6 +435,103 @@ def trepa_colinas():
         messagebox.showinfo("Vitoria", "Goal Achieved")
 
         exit()
+def depth_search(depth_of_search, road_list, position, goal):
+    print("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU")
+    print("GOAL: ", goal)
+    print("Posicao: ", position)
+    """
+    Recursively calls itself until it reaches the given depth,
+    finds a path to the goal or exhausts all possible options.
+    Uses an unweighted depth search algorithm as basis.
+
+    @:param depth_of_search : int -> Sets how much steps\plays ahead can the algorithm see in the world.
+    @:param road_list : list -> Coordinates of mother method to calculate.
+    @:param position : int -> Current coordinates of the algorythm
+    @:param goal : int -> Coordinates of the goal
+    @:returns road_list : list -> Coordinates to goal on success, None on failure.
+    """
+    if position == goal:  # Detectar se ja chegou ao goal
+        print("----------------------------------------------------------------------")
+        return road_list
+    if depth_of_search > 0:
+            depth_of_search -= 1
+
+            raw = c.send_request("info", "south")
+            south = raw.decode()
+            raw =  c.send_request("info", "east")
+            east = raw.decode()
+            raw = c.send_request("info", "north")
+            north = raw.decode()
+            raw = c.send_request("info", "west")
+            west = raw.decode()
+
+            possibility_list = [south, east, north, west]
+            contador = 0
+            prev_posi = [] #
+            while contador <= 3:
+
+                if possibility_list[contador] == "[]" or possibility_list[contador] == "['goal']": #compara as casas vizinhas com "nada" ou o "goal"
+                    if contador == 0 and position[1] < 5:
+                        c.send_request("command", "south")
+                        prev_posi = position
+                        position = [position[0], position[1] + 1]
+                        road_list.append(position)
+                        check = depth_search(depth_of_search, road_list, position, goal)
+                        if check == "no deph" or check == "no possibilities":  # Se nao encontrou este if é para voltar ao ponto anterior
+                            position = prev_posi
+                            c.send_request("command", "north")
+                            road_list.pop()
+                        else:
+                            return check
+
+                    elif contador == 1 and position[0] < 5:
+                        c.send_request("command", "east")
+                        prev_posi = position
+                        position = [position[0] + 1, position[1]]
+                        road_list.append(position)
+                        check = depth_search(depth_of_search, road_list, position, goal)
+                        if check == "no deph" or check == "no possibilities":  # Se nao encontrou este if é para voltar ao ponto anterior
+                            position = prev_posi
+                            c.send_request("command", "west")
+                            road_list.pop()
+                        else:
+                            return check
+
+                    elif contador == 2 and position [1] > 0:
+                        c.send_request("command", "north")
+                        prev_posi = position
+                        position = [position[0], position[1] - 1]
+                        road_list.append(position)
+                        check = depth_search(depth_of_search, road_list, position, goal)
+                        if check == "no deph" or check == "no possibilities":  # Se nao encontrou este if é para voltar ao ponto anterior
+                            position = prev_posi
+                            c.send_request("command", "south")
+                            road_list.pop()
+                        else:
+                            return check
+
+                    elif contador == 3 and position[0] > 0:
+                        c.send_request("command", "west")
+                        prev_posi = position
+                        position = [position[0] -1 , position[1]]
+                        road_list.append(position)
+                        check = depth_search(depth_of_search, road_list, position, goal)
+                        if check == "no deph" or check == "no possibilities":  # Se nao encontrou este if é para voltar ao ponto anterior
+                            position = prev_posi
+                            c.send_request("command", "east")
+                            road_list.pop()
+                        else:
+                            return check
+
+
+
+
+                contador = contador + 1
+            return "no possibilities"
+    else:
+        return "no deph"
+
+
 
 
 x = -1000
@@ -446,7 +543,19 @@ while x != 0:
         if x == 1:
             initial_project()
         elif x == 2:
-            print("Work in Progress")
+            deph = int(input(("Digite o valor da profundidade: ")))
+            raw = c.send_request("info", "position")
+            raw_dec = raw.decode()
+            position = [int(raw_dec[1]), int(raw_dec[4])]
+            print(position)
+            raw = c.send_request("info", "goal")
+            raw_dec = raw.decode()
+            goal = [int(raw_dec[1]), int(raw_dec[4])]
+            print(goal)
+            road_list = [position]
+            road_list = depth_search(deph, road_list, position, goal)
+            print(road_list)
+
         elif x == 3:
             trepa_colinas()
         else:

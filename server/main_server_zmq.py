@@ -114,22 +114,14 @@ def loop():
 
             print("Listening...")
             while True:
-#                counter_agent = 0
-#                listaAgentes = []
-                    '''
-                while buffer_size <= counter_agent:
-                    if(agente not in listaAgentes):
-                        try:
-                            data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-                            header, value = data.decode().split()
-                            print("Header: ", header, "Value:", value)
-                            listaAgentes.append(agente)
-                        except ValueError as erro_excepcao:
-                            print("Valor nulo ou menor que dois?", erro_excepcao)
-                            break
-                    '''
-                    header = ""
-                    value = ""
+                    try:
+                        data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
+                        header, value = data.decode().split()
+                        print("Header: ",header,"Value:", value)
+
+                    except ValueError as erro_excepcao:
+                        print("Valor nulo ou menor que dois?", erro_excepcao)
+                        break
                     res = ''
                     if header == 'command':
                         # -----------------------
@@ -286,126 +278,3 @@ if __name__ == "__main__":
 
     # Loop
     loop()
-
-
-def processInstructions(header,value):
-    res = ''
-    if header == 'command':
-        # -----------------------
-        # movements without considering the direction
-        # of the face of the object but testing the objects
-        # -----------------------
-        if value == 'north':
-            agent.close_eyes()
-            res = board.move_north(agent, 'forward')
-            if not board.is_target_obstacle(res):
-                board.change_position(agent, res[0], res[1])
-
-        elif value == 'south':
-            agent.close_eyes()
-            res = board.move_south(agent, 'forward')
-            if not board.is_target_obstacle(res):
-                board.change_position(agent, res[0], res[1])
-
-        elif value == 'east':
-            agent.close_eyes()
-            res = board.move_east(agent, 'forward')
-            if not board.is_target_obstacle(res):
-                board.change_position(agent, res[0], res[1])
-
-        elif value == 'west':
-            agent.close_eyes()
-            res = board.move_west(agent, 'forward')
-            if not board.is_target_obstacle(res):
-                board.change_position(agent, res[0], res[1])
-
-        # -----------------------
-        # move to home
-        # -----------------------
-        elif value == 'home':
-            res = board.move_home(agent)
-
-        elif value == 'forward':
-            res = board.move(agent, 'forward')
-
-        elif value == 'left':
-            res = board.turn_left(agent)
-
-        elif value == 'right':
-            res = board.turn_right(agent)
-
-        elif value == "set_steps":
-            res = board.set_stepsview(agent)
-
-        elif value == "reset_steps":
-            res = board.reset_stepsview(agent)
-
-        elif value == "open_eyes":
-            res = agent.open_eyes()
-
-        elif value == "close_eyes":
-            res = agent.close_eyes()
-        elif value == "clean_board":
-            res = board.clean_board()
-        elif value == "bye" or value == "exit":
-            exit(1)
-        else:
-            pass
-    elif header == 'info':
-        if value == 'direction':
-            res = agent.get_direction()
-        elif value == 'view':
-            front = board.getplaceahead(agent)
-            res = board.view_object(agent, front)
-        elif value == "weights":
-            res = board.view_weights(agent, 'front')
-        elif value == 'map':
-            print('Map:', board.view_global_weights(agent))
-            res = board.view_global_weights(agent)
-        elif value == 'obstacles':
-            print('Obstacles:', board.view_obstacles(agent))
-            res = board.view_obstacles(agent)
-        elif value == 'goal' or value == 'target':
-            res = board.getgoalposition(agent)
-            # print('Goal:',res)
-        elif value == 'position':
-            res = (agent.get_x(), agent.get_y())
-            # print('Position:', res)
-        elif value == 'maxcoord':
-            res = board.get_maxcoord()
-            # print('MaxCoordinates:', res)
-        elif value == 'north':
-            # View north
-            front = board.getplacedir(agent, 'north')
-            print("Front: ", front, res)
-            res = board.view_object(agent, front)
-            print("Front after:", front)
-            print("NORTH: ", res)
-            # res = front
-        elif value == 'south':
-            # View north
-            front = board.getplacedir(agent, 'south')
-            res = board.view_object(agent, front)
-            print("SOUTH: ", res)
-            print("Front after:", front)
-            # res = front
-        elif value == 'east':
-            # View north
-            front = board.getplacedir(agent, 'east')
-            res = board.view_object(agent, front)
-            print("EAST: ", res)
-
-            print("Front after:", front)
-            # res = front
-        elif value == 'west':
-            # View north
-            front = board.getplacedir(agent, 'west')
-            res = board.view_object(agent, front)
-            print("WEST: ", res)
-
-            print("Front after:", front)
-            # res = front
-        else:
-            pass
-
-        return res

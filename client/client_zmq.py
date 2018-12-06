@@ -9,11 +9,9 @@ class Client:
     def __init__(self, ip="127.0.0.1", port=50000):
         context = zmq.Context()
         print("Connecting to server...")
-        socket = context.socket(zmq.REQ)
-        socket.connect("tcp://" + ip + ":" + str(port))
+        self.connected = context.socket(zmq.REQ)
+        self.connected.connect("tcp://" + ip + ":" + str(port))
         #socket.connect("tcp://*:"+str(port))
-        self.connected = socket
-        pass
 
     def send_request(self, request_header="info", request="south"):
         """

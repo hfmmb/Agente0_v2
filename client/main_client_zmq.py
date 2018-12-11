@@ -249,14 +249,11 @@ def trepa_colinas():
                 #NORTH
                 requested_data = c.send_request("info", "north")
                 coord_x = requested_data.decode()
-                print("coord x:",coord_x)
                 if coord_x == "[]":
                     possibility_list.append(coord_x)
                 elif len(coord_x)>4:
                     possibility_list.append(coord_x)
                 else:
-                    print("Requested data: ", requested_data)
-                    print("Coord x: ", coord_x)
                     coord_y = int(coord_x[4])
                     coord_x = int(coord_x[1])
                     possibility_list.append([coord_x, coord_y])
@@ -297,8 +294,6 @@ def trepa_colinas():
                     coord_x = int(coord_x[1])
                     possibility_list.append([coord_x, coord_y])
 
-                print("Possibilidades movimento: ", possibility_list)
-                print("LP: ", possibility_list[0], "PA: ", starting_position)
                 generated_random_number = random.randint(0, 1)
                 if generated_random_number == 0:
                     if starting_position[0] != goal[0]:
@@ -399,7 +394,6 @@ def trepa_colinas():
                                 print("obstaculo a frente")
                                 contador_tentativas += 1
                                 if contador_tentativas > 3:
-                                    print("entrei")
                                     rand = random.randint(0, 2)
                                     if rand == 0:
                                         if possibility_list[2] != ("['obstacle']") and starting_position[0] > 0:
@@ -424,10 +418,6 @@ def trepa_colinas():
                             else:
                                 c.send_request("command", "south")
                                 starting_position[1] += 1
-                print("--------------")
-                print("Posicao atual: ",starting_position)
-                print("Goal: ",goal)
-                print("--------------")
 
             except ConnectionError as excepcao_erro:
                 print("Server ligado?", excepcao_erro)
@@ -438,8 +428,6 @@ def trepa_colinas():
 
 
 def depth_search(depth_of_search, road_list, position, goal):
-    print("GOAL: ", goal)
-    print("Posicao: ", position)
     """
     Recursively calls itself until it reaches the given depth,
     finds a path to the goal or exhausts all possible options.
@@ -452,7 +440,6 @@ def depth_search(depth_of_search, road_list, position, goal):
     @:returns road_list : list -> Coordinates to goal on success, None on failure.
     """
     if position == goal:  # Checks if it has reached the goal
-        print("----------------------------------------------------------------------")
         return road_list
     if depth_of_search > 0:
             depth_of_search -= 1 # Decreases the deph
@@ -599,11 +586,3 @@ while x != 0:
             print("Valor inexitente ou errado!")
     except ValueError as excepcao_erro:
         print("Valor inexitente ou errado!", excepcao_erro)
-
-
-'''
-x = 0
-while x <40:
-    c.execute("command", "east")
-    x = x + 1
-'''

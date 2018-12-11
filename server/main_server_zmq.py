@@ -191,36 +191,29 @@ def loop():
                         elif value == 'north':
                             # View north
                             front = board.getplacedir(agent, 'north')
-                            print("Front: ", front, res)
                             res = board.view_object(agent, front)
-                            print("Front after:",front)
                             print("NORTH: ", res)
                         elif value == 'south':
                             # View north
                             front = board.getplacedir(agent, 'south')
                             res = board.view_object(agent, front)
                             print("SOUTH: ", res)
-                            print("Front after:", front)
                         elif value == 'east':
                             # View north
                             front = board.getplacedir(agent, 'east')
                             res = board.view_object(agent, front)
                             print("EAST: ", res)
 
-                            print("Front after:", front)
                         elif value == 'west':
                             # View north
                             front = board.getplacedir(agent, 'west')
                             res = board.view_object(agent, front)
                             print("WEST: ", res)
 
-                            print("Front after:",front)
                         else:
                             pass
                     if res != '':
-                        print("Res: ", res)
                         return_data = str.encode(str(res))
-                        print("data: ", return_data)
                     else:
                         return_data = str.encode(
                             "what? "

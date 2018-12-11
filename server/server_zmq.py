@@ -1,6 +1,6 @@
 import zmq
 from project_commons import *
-
+import random
 
 class Server:
 
@@ -9,10 +9,23 @@ class Server:
         socket = context.socket(zmq.REP)
 
         socket.bind("tcp://*:" + str(port))
-        #socket.bind("tcp://" + ip + ":" + str(port))
-        #socket.bind("tcp://wlp8s0:" + str(port))
         self.connected = socket
-        pass
 
     def close_connection(self):
         pass
+
+    @staticmethod
+    def randomize_buffer(data):
+        """
+        Recives the data sent by the clients stored in the buffer, and randomizes the instruction order of said data.
+        :param data: List -> Contrains the original unrandomized data
+        :return: ordered_data -> Contaons the final randomized data buffer
+        """
+        ordered_data = []
+        for i in range(len(data)):
+            if len(ordered_data) <= 0:
+                ordered_data.append(data.pop())
+            else:
+                ordered_data.insert(random.randrange(0, len(data)), data.pop(random.randrange(0, len(data))))
+
+        return ordered_data

@@ -26,7 +26,7 @@ class Client:
         # Sending request to server
         print("Sending request...")
         # self.connected.send(request_header+" "+ request)
-        self.connected.send_string(request_header + " " + request)
+        self.connected.send_string(str(self.send_object_hash()) + " " + request_header + " " + request)
         #request = request_header+request
         #self.connected.send_unicode(request_header + " " + request)
         #self.connected.send(request_header,request)
@@ -40,9 +40,10 @@ class Client:
 
     def send_object_hash(self):
         """
-        Sends the hash of the client object as a string.
+        Returns the hash of the client object as a string.
+        :returns Client hash value
         """
-        self.connected.send_string(self.__hash__())
+        return self.__hash__()
 
     def depth_search(self, depth_of_search, list_coordinates_play):
         """

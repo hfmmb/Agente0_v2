@@ -100,12 +100,15 @@ def loop():
             while True:
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-                        header, value = data.decode().split()
-                        print("Header: ", header, "Value:", value)
+                        local_hash, header, value = data.decode().split()
+                        print("Hash: ", local_hash, "Header: ", header, "Value:", value)
+                        if local_hash not in AGENTS_DICT:
+                            new_player(local_hash)
 
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
                         break
+                    agent = AGENTS_DICT[local_hash]
                     res = ''
                     if header == 'command':
                         # -----------------------
@@ -224,6 +227,33 @@ def loop():
 
 
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
+
+def new_player(hash):
+
+    global AGENT_COUNT
+    x = 0
+    y = 0
+    if AGENT_COUNT > 0:
+        for i in AGENTS_DICT:
+            if (x,y) not in (AGENTS_DICT[k].values().get_x, AGENTS_DICT[i].values().get_y):
+                print("False")
+            else:
+                print("True")
+    else:
+        # Initialize player
+        agent = gb.Player(CONST_IMAGE_DIR, 'player' + str(AGENT_COUNT), player_coordinates[0], player_coordinates[1], 'south', 'front', True)
+        agent.set_home((player_coordinates[0], player_coordinates[1]))
+        agent.close_eyes()
+
+        # Add player
+        board.add(agent, player_coordinates[0], player_coordinates[1])
+        root.update()
+        AGENT_COUNT += 1
+
+        AGENTS_DICT[hash] = agent
+        print(AGENTS_DICT)
+
+
 if __name__ == "__main__":
 
     print("Starting the Game Board")
@@ -236,23 +266,6 @@ if __name__ == "__main__":
     initialize_goal(CONST_IMAGE_DIR, (CONST_GOAL_COORD_X, CONST_GOAL_COORD_Y))
     initialize_bomb(CONST_IMAGE_DIR, [], CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
     root.update()
-    # PLAYER PLAYER:
-    # Initialize player
-    agent = gb.Player(CONST_IMAGE_DIR, 'player', player_coordinates[0], player_coordinates[1], 'south', 'front', True)
-    agent.set_home((player_coordinates[0], player_coordinates[1]))
-    agent.close_eyes()
-    # Add player
-    board.add(agent, player_coordinates[0], player_coordinates[1])
-    root.update()
-
-    # Initialize player2
-    agent2 = gb.Player(CONST_IMAGE_DIR, 'player1', 5, 5, 'south', 'front', True)
-    agent2.set_home((5,5))
-    agent2.close_eyes()
-    # Add player2
-    board.add(agent2, 5, 5)
-    root.update()
-
-
     # Loop
     loop()
+

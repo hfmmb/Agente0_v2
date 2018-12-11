@@ -45,8 +45,8 @@ def initial_project():
             try:
                 posicao_atual = c.send_request("info", "position")
 
-            except ValueError as excepcao_erro:
-                print("Valor invalido ou nulo", excepcao_erro)
+            except ValueError as erro_valor:
+                print("Valor invalido ou nulo", erro_valor)
             cord_x = int(posicao_atual[1])
             cord_y = int(posicao_atual[4])
             history_list.append([cord_x, cord_y])

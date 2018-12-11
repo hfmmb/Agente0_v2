@@ -39,6 +39,9 @@ class Client:
         return reply
 
     def send_object_hash(self):
+        """
+        Sends the hash of the client object as a string.
+        """
         self.connected.send_string(self.__hash__())
 
     def depth_search(self, depth_of_search, list_coordinates_play):

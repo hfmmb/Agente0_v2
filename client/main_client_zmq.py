@@ -12,7 +12,7 @@ Client-Server network arquiteture.
 ZeroMQ: http://zguide.zeromq.org/
 """
 
-from client_zmq import Client
+from client.client_zmq import Client
 import random
 from tkinter import messagebox
 from server.__init__ import *

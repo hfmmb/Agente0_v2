@@ -2,6 +2,7 @@ import zmq
 from project_commons import *
 import random
 
+
 class Server:
 
     def __init__(self, ip="127.0.0.1", port=50000):
@@ -18,8 +19,8 @@ class Server:
     def randomize_buffer(data):
         """
         Recives the data sent by the clients stored in the buffer, and randomizes the instruction order of said data.
-        :param data: List -> Contrains the original unrandomized data
-        :return: ordered_data -> Contaons the final randomized data buffer
+        :param data: List -> Contains the original unrandomized data
+        :return: ordered_data -> Contains the final randomized data buffer
         """
         ordered_data = []
         for i in range(len(data)):

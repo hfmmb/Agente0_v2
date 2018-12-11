@@ -226,6 +226,7 @@ def initial_project():
 
     # ------------------------------------------------------------------------------------------------------------------
 
+
 def trepa_colinas():
 
         contador_tentativas = 0
@@ -434,6 +435,8 @@ def trepa_colinas():
         messagebox.showinfo("Vitoria", "Goal Achieved")
 
         exit()
+
+
 def depth_search(depth_of_search, road_list, position, goal):
     print("GOAL: ", goal)
     print("Posicao: ", position)

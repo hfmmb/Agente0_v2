@@ -30,26 +30,11 @@ def initialize_obstacles(image_dir, list_obstacles):
         board.add(ob, obstacle[0], obstacle[1])
         i += 1
 
-    # ob1 = gb.Obstacle('ob1', 0, 3, 'obstacle1', False)
-    # board.add(ob1, 0, 3)
-    # ob2 = gb.Obstacle('ob2', 3, 4, 'obstacle1', False)
-    # board.add(ob2,3, 4)
-    # ob3 = gb.Obstacle('ob3', 2, 2, 'obstacle1', False)
-    # board.add(ob3, 2, 2)
-    # ob4 = gb.Obstacle('ob4', 5, 3, 'obstacle1', False)
-    # board.add(ob4, 5, 3)
-    # ob5 = gb.Obstacle('ob5', 1, 5, 'obstacle1', False)
-    # board.add(ob5, 1, 5)
-    # ob6 = gb.Obstacle('ob6', 6, 6, 'obstacle1', False)
-    # board.add(ob6, 6, 6)
-
 
 def initialize_goal(dir_image, pos):
-    #    goal = gb.Goal('goal1', 10, 12, 'goal', False)
-    #    board.add(goal, 10, 12)
+
     goal = gb.Goal(dir_image, 'goal1', pos[0], pos[1], 'goal', False)
     board.add(goal, pos[0], pos[1])
-    # print(pos[0],pos[1])
 
 
 def initialize_bomb(dir_image, list_bombs, rows, columns):
@@ -106,7 +91,6 @@ def initialize_weights(image_dir):
                 name = "patch_heavy"
             patch[column][row] = gb.Patch(image_dir, 'patch' + str(column) + "-" + str(row),
                                           name, column, row, weight, False)
-            # print(res)
             board.add(patch[column][row], column, row)
 
 
@@ -117,7 +101,7 @@ def loop():
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
                         header, value = data.decode().split()
-                        print("Header: ",header,"Value:", value)
+                        print("Header: ", header, "Value:", value)
 
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
@@ -200,13 +184,10 @@ def loop():
                             res = board.view_obstacles(agent)
                         elif value == 'goal' or value == 'target':
                             res = board.getgoalposition(agent)
-                            # print('Goal:',res)
                         elif value == 'position':
                             res = (agent.get_x(), agent.get_y())
-                            # print('Position:', res)
                         elif value == 'maxcoord':
                             res = board.get_maxcoord()
-                            # print('MaxCoordinates:', res)
                         elif value == 'north':
                             # View north
                             front = board.getplacedir(agent, 'north')
@@ -214,14 +195,12 @@ def loop():
                             res = board.view_object(agent, front)
                             print("Front after:",front)
                             print("NORTH: ", res)
-                            #res = front
                         elif value == 'south':
                             # View north
                             front = board.getplacedir(agent, 'south')
                             res = board.view_object(agent, front)
                             print("SOUTH: ", res)
                             print("Front after:", front)
-                            #res = front
                         elif value == 'east':
                             # View north
                             front = board.getplacedir(agent, 'east')
@@ -229,7 +208,6 @@ def loop():
                             print("EAST: ", res)
 
                             print("Front after:", front)
-                            #res = front
                         elif value == 'west':
                             # View north
                             front = board.getplacedir(agent, 'west')
@@ -237,11 +215,10 @@ def loop():
                             print("WEST: ", res)
 
                             print("Front after:",front)
-                            #res = front
                         else:
                             pass
                     if res != '':
-                        print("Res: ",res)
+                        print("Res: ", res)
                         return_data = str.encode(str(res))
                         print("data: ", return_data)
                     else:
@@ -265,7 +242,6 @@ if __name__ == "__main__":
     initialize_obstacles(CONST_IMAGE_DIR, [])
     initialize_goal(CONST_IMAGE_DIR, (CONST_GOAL_COORD_X, CONST_GOAL_COORD_Y))
     initialize_bomb(CONST_IMAGE_DIR, [], CONST_BOARD_ROWS, CONST_BOARD_COLUMNS)
-    # initialize_weights(CONST_IMAGE_DIR)
     root.update()
     # PLAYER PLAYER:
     # Initialize player

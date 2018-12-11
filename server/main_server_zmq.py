@@ -276,5 +276,14 @@ if __name__ == "__main__":
     board.add(agent, player_coordinates[0], player_coordinates[1])
     root.update()
 
+    # Initialize player2
+    agent2 = gb.Player(CONST_IMAGE_DIR, 'player1', 5, 5, 'south', 'front', True)
+    agent2.set_home((5,5))
+    agent2.close_eyes()
+    # Add player2
+    board.add(agent2, 5, 5)
+    root.update()
+
+
     # Loop
     loop()

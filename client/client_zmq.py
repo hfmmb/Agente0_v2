@@ -38,6 +38,9 @@ class Client:
         time.sleep(0.05)
         return reply
 
+    def send_object_hash(self):
+        self.connected.send_string(self.__hash__())
+
     def depth_search(self, depth_of_search, list_coordinates_play):
         """
         Recursively calls itself until it reaches the given depth,

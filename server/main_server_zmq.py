@@ -220,7 +220,7 @@ def loop():
                             front = board.getplacedir(agent, 'south')
                             res = board.view_object(agent, front)
                             print("SOUTH: ", res)
-                            print("Front after:",front)
+                            print("Front after:", front)
                             #res = front
                         elif value == 'east':
                             # View north
@@ -228,7 +228,7 @@ def loop():
                             res = board.view_object(agent, front)
                             print("EAST: ", res)
 
-                            print("Front after:",front)
+                            print("Front after:", front)
                             #res = front
                         elif value == 'west':
                             # View north

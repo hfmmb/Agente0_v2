@@ -32,7 +32,7 @@ class Client:
         reply = self.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
         # Printing the reply
         print("Reply from server: ", reply)
-        time.sleep(0.025)
+        time.sleep(0.5)
         return reply
 
     def send_object_hash(self):

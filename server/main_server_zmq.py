@@ -101,14 +101,21 @@ def loop():
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
                         local_hash, header, value = data.decode().split()
-                        print("Hash: ", local_hash, "Header: ", header, "Value:", value)
+                        # print("Hash: ", local_hash, "Header: ", header, "Value:", value)
                         if local_hash not in AGENTS_DICT:
+                            print(local_hash)
                             new_player(local_hash)
 
                     except ValueError as erro_excepcao:
                         print("Valor nulo ou menor que dois?", erro_excepcao)
                         break
-                    agent = AGENTS_DICT[local_hash]
+                    try:
+                        agent = AGENTS_DICT.get(local_hash)
+                        print("oooo")
+                        print(agent)
+                        print("oooo")
+                    except KeyError as erro_excepcao:
+                        print("Chave não encontrada",erro_excepcao)
                     res = ''
                     if header == 'command':
                         # -----------------------
@@ -229,29 +236,33 @@ def loop():
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
 
 def new_player(hash):
-
+    global player_coordinates
     global AGENT_COUNT
     x = 0
     y = 0
     if AGENT_COUNT > 0:
         for i in AGENTS_DICT:
-            if (x,y) not in (AGENTS_DICT[k].values().get_x, AGENTS_DICT[i].values().get_y):
-                print("False")
-            else:
-                print("True")
-    else:
-        # Initialize player
-        agent = gb.Player(CONST_IMAGE_DIR, 'player' + str(AGENT_COUNT), player_coordinates[0], player_coordinates[1], 'south', 'front', True)
-        agent.set_home((player_coordinates[0], player_coordinates[1]))
-        agent.close_eyes()
+            comparacao = AGENTS_DICT[i].get_home()
+            print(comparacao[0])
 
-        # Add player
-        board.add(agent, player_coordinates[0], player_coordinates[1])
-        root.update()
-        AGENT_COUNT += 1
+            if x == comparacao[0] and y == comparacao[1]:
+                player_coordinates = [1, 2]
 
-        AGENTS_DICT[hash] = agent
-        print(AGENTS_DICT)
+
+
+
+    # Initialize player
+    agent = gb.Player(CONST_IMAGE_DIR, 'player' + str(AGENT_COUNT), player_coordinates[0], player_coordinates[1], 'south', 'front', True)
+    agent.set_home((player_coordinates[0], player_coordinates[1]))
+    agent.close_eyes()
+
+    # Add player
+    board.add(agent, player_coordinates[0], player_coordinates[1])
+    root.update()
+    AGENT_COUNT += 1
+
+    AGENTS_DICT[hash] = agent
+    print("Dicionário:", AGENTS_DICT)
 
 
 if __name__ == "__main__":

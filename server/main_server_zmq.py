@@ -18,6 +18,7 @@ import random
 import tkinter as tk
 from server.__init__ import *
 from project_commons import *
+import threading
 
 s = Server()
 
@@ -93,10 +94,27 @@ def initialize_weights(image_dir):
                                           name, column, row, weight, False)
             board.add(patch[column][row], column, row)
 
+#def data_buffer(buffer):
+#    while True:
+#        if timer.is_alive():
+#            data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
+#            local_hash, header, value = data.decode().split()
+#            if local_hash not in buffer:
+#                buffer[local_hash] = header, value
+#                print(buffer)
+#        else:
+#            timer.cancel()
+#            return buffer
 
 def loop():
 
             print("Listening...")
+#            buffer = {}
+#            timer = threading.Timer(BUFFER_TIME_INTERVAL, data_buffer)
+#            timer.start()
+
+
+
             while True:
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)

@@ -13,6 +13,7 @@ class Server:
         self.connected = socket
 
     def close_connection(self):
+        self.connected.close()
         pass
 
     @staticmethod

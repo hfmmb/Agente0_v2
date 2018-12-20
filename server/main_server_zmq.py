@@ -111,9 +111,6 @@ def loop():
                         break
                     try:
                         agent = AGENTS_DICT.get(local_hash)
-                        print("oooo")
-                        print(agent)
-                        print("oooo")
                     except KeyError as erro_excepcao:
                         print("Chave não encontrada",erro_excepcao)
                     res = ''

@@ -574,7 +574,16 @@ def manual_movement():
         if x != ("['player']") and x != ("['obstacle']"):
             c.send_request(action, value)
 
+        raw = c.send_request("info", "position")
+        raw_dec = raw.decode()
+        position = [int(raw_dec[1]), int(raw_dec[4])]
 
+        raw = c.send_request("info", "goal")
+        raw_dec = raw.decode()
+        goal = [int(raw_dec[1]), int(raw_dec[4])]
+
+        if position == goal:
+            messagebox.showinfo("Vitoria", "Goal Achieved")
 x = -1000
 while x != 0:
 

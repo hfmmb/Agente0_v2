@@ -124,11 +124,15 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'south':
                             agent.close_eyes()
                             res = board.move_south(agent, 'forward')
                             if not board.is_target_obstacle(res):
+                                board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
                                 board.change_position(agent, res[0], res[1])
 
                         elif value == 'east':
@@ -136,11 +140,15 @@ def loop():
                             res = board.move_east(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'west':
                             agent.close_eyes()
                             res = board.move_west(agent, 'forward')
                             if not board.is_target_obstacle(res):
+                                board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
                                 board.change_position(agent, res[0], res[1])
 
                         # -----------------------

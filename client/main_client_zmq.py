@@ -304,19 +304,19 @@ def trepa_colinas():
                                 if contador_tentativas > 3:
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if possibility_list[3] != ("['obstacle']") and \
+                                        if possibility_list[3] != ("['obstacle']") and possibility_list[3] != ("['player']") and \
                                                 starting_position[0] < (CONST_BOARD_ROWS-1):
 
                                             starting_position[0] += 1
                                             c.send_request("command", "east")
 
                                     elif rand == 1:
-                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] > 0:
+                                        if possibility_list[0] != ("['obstacle']") and possibility_list[0] != ("['player']") and starting_position[1] > 0:
                                             starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     elif rand == 2:
-                                        if possibility_list[1] != ("['obstacle']") and \
+                                        if possibility_list[1] != ("['obstacle']") and possibility_list[1] != ("['player']") and \
                                                 starting_position[1] < (CONST_BOARD_ROWS-1):
 
                                             starting_position[1] += 1
@@ -324,6 +324,8 @@ def trepa_colinas():
 
                                     contador_tentativas = 0
                             elif possibility_list[3] == ("['bomb']"):
+                                print("Bomba à frente")
+                            elif possibility_list[2] == ("['player']"):
                                 print("Bomba à frente")
                             else:
                                 c.send_request("command", "west")
@@ -336,17 +338,17 @@ def trepa_colinas():
                                 if contador_tentativas > 3:
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if possibility_list[2] != ("['obstacle']") and starting_position[0] > 0:
+                                        if possibility_list[2] != ("['obstacle']") and possibility_list[2] != ("['player']") and starting_position[0] > 0:
                                             starting_position[0] -= 1
                                             c.send_request("command", "west")
 
                                     elif rand == 1:
-                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] > 0:
+                                        if possibility_list[0] != ("['obstacle']") and possibility_list[0] != ("['player']") and starting_position[1] > 0:
                                             starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     elif rand == 2:
-                                        if possibility_list[1] != ("['obstacle']") and \
+                                        if possibility_list[1] != ("['obstacle']") and possibility_list[1] != ("['player']")  and \
                                                 starting_position[1] < (CONST_BOARD_ROWS-1):
                                             starting_position[1] += 1
                                             c.send_request("command", "south")
@@ -354,6 +356,8 @@ def trepa_colinas():
                                     contador_tentativas = 0
                             elif possibility_list[2] == ("['bomb']"):
                                 print("Bomba à frente")
+                            elif possibility_list[2] == ("['player']"):
+                                print("Player á frente")
                             else:
                                 c.send_request("command", "east")
                                 starting_position[0] += 1
@@ -366,18 +370,18 @@ def trepa_colinas():
                                 if contador_tentativas > 3:
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if possibility_list[2] != "['obstacle']" and starting_position[0] > 0:
+                                        if possibility_list[2] != "['obstacle']" and possibility_list[2] != "['player']" and starting_position[0] > 0:
                                             starting_position[0] -= 1
                                             c.send_request("command", "west")
 
                                     elif rand == 1:
-                                        if possibility_list[3] != "['obstacle']" and \
+                                        if possibility_list[3] != "['obstacle']" and possibility_list[3] != "['player']" and \
                                                 starting_position[0] < (CONST_BOARD_COLUMNS-1):
                                             starting_position[0] += 1
                                             c.send_request("command", "east")
 
                                     elif rand == 2:
-                                        if possibility_list[1] != "['obstacle']" and \
+                                        if possibility_list[1] != "['obstacle']" and possibility_list[1] != "['player']" and \
                                                 starting_position[1] < (CONST_BOARD_COLUMNS-1):
                                             starting_position[1] += 1
                                             c.send_request("command", "south")
@@ -385,6 +389,9 @@ def trepa_colinas():
                                     contador_tentativas = 0
                             elif possibility_list[0] == "['bomb']":
                                 print("bomba a frente")
+
+                            elif possibility_list[0] == "['player']":
+                                print("Player á frente")
                             else:
                                 c.send_request("command", "north")
                                 starting_position[1] -= 1
@@ -396,25 +403,27 @@ def trepa_colinas():
                                 if contador_tentativas > 3:
                                     rand = random.randint(0, 2)
                                     if rand == 0:
-                                        if possibility_list[2] != ("['obstacle']") and starting_position[0] > 0:
+                                        if possibility_list[2] != ("['obstacle']") and possibility_list[2] != ("['player']") and starting_position[0] > 0:
                                             starting_position[0] -= 1
                                             c.send_request("command", "west")
 
                                     elif rand == 1:
-                                        if possibility_list[3] != ("['obstacle']") and \
+                                        if possibility_list[3] != ("['obstacle']") and possibility_list[3] != ("['player']") and \
                                                 starting_position[0] < (CONST_BOARD_COLUMNS-1):
 
                                             starting_position[0] += 1
                                             c.send_request("command", "east")
 
                                     elif rand == 2:
-                                        if possibility_list[0] != ("['obstacle']") and starting_position[1] > 0:
+                                        if possibility_list[0] != ("['obstacle']") and possibility_list[0] != ("['player']") and starting_position[1] > 0:
                                             starting_position[1] -= 1
                                             c.send_request("command", "north")
 
                                     contador_tentativas = 0
                             elif possibility_list[1] == ("['bomb']"):
                                 print("bomba a frente")
+                            elif possibility_list[1] == ("['player']"):
+                                print("Player a frente")
                             else:
                                 c.send_request("command", "south")
                                 starting_position[1] += 1

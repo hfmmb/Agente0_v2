@@ -569,7 +569,10 @@ def manual_movement():
     while True:
         action, value = input("Insert action value pairs:").split()
         print("Action Value pair:", action, ":", value)
-        c.send_request(action, value)
+        raw_x =c.send_request("info", value)
+        x = raw_x.decode()
+        if x != ("['player']") and x != ("['obstacle']"):
+            c.send_request(action, value)
 
 
 x = -1000

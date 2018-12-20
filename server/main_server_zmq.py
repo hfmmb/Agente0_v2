@@ -6,7 +6,7 @@
 @since: 12/11/2018
 
 Creates a client server connection to send and receive commands with the help of the module ZeroMQ <pyzmq>, this method
-makes the connection more reliable and stable than doing it directly using sockets. This is the Server side of the
+makes the connection more reliable aand stable than doing it directly using sockets. This is the Server side of the
 Client-Server network architecture.
 
 ZeroMQ: http://zguide.zeromq.org/
@@ -129,9 +129,6 @@ def loop():
                         break
                     try:
                         agent = AGENTS_DICT.get(local_hash)
-                        print("oooo")
-                        print(agent)
-                        print("oooo")
                     except KeyError as erro_excepcao:
                         print("Chave não encontrada",erro_excepcao)
                     res = ''
@@ -145,11 +142,15 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'south':
                             agent.close_eyes()
                             res = board.move_south(agent, 'forward')
                             if not board.is_target_obstacle(res):
+                                board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
                                 board.change_position(agent, res[0], res[1])
 
                         elif value == 'east':
@@ -157,11 +158,15 @@ def loop():
                             res = board.move_east(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
+                                board.change_position(agent, res[0], res[1])
 
                         elif value == 'west':
                             agent.close_eyes()
                             res = board.move_west(agent, 'forward')
                             if not board.is_target_obstacle(res):
+                                board.change_position(agent, res[0], res[1])
+                            if not board.is_target_player(res):
                                 board.change_position(agent, res[0], res[1])
 
                         # -----------------------

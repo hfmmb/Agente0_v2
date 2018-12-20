@@ -515,6 +515,13 @@ class GameBoard(tk.Frame):
                 if obj.get_x() == coordinates[0] and obj.get_y() == coordinates[1]:
                     return True
         return False
+    def is_target_player(self, coordinates):
+        """Test if in the coordinates there is an obstacle"""
+        for obj in self.objects:
+            if isinstance(obj, Player):
+                if obj.get_x() == coordinates[0] and obj.get_y() == coordinates[1]:
+                    return True
+        return False
 
     def move(self, object, movement):
         """Moves to direction selected but only if there is no obstacle!"""
@@ -522,20 +529,28 @@ class GameBoard(tk.Frame):
             res = self.move_north(object, movement)
             if not self.is_target_obstacle(res):
                 self.change_position(object, res[0], res[1])
+            if not self.is_target_player(res):
+                self.change_position(object, res[0], res[1])
 
         elif object.get_direction() == "south":
             res = self.move_south(object, movement)
             if not self.is_target_obstacle(res):
+                self.change_position(object, res[0], res[1])
+            if not self.is_target_player(res):
                 self.change_position(object, res[0], res[1])
 
         elif object.get_direction() == "east":
             res = self.move_east(object, movement)
             if not self.is_target_obstacle(res):
                 self.change_position(object, res[0], res[1])
+            if not self.is_target_player(res):
+                self.change_position(object, res[0], res[1])
 
         elif object.get_direction() == "west":
             res = self.move_west(object, movement)
             if not self.is_target_obstacle(res):
+                self.change_position(object, res[0], res[1])
+            if not self.is_target_player(res):
                 self.change_position(object, res[0], res[1])
         else:
             res = self.move_idle(object, movement)
@@ -595,7 +610,7 @@ class GameBoard(tk.Frame):
     # ------------------------------------------------
 
     def view_object(self, object, coordinates):
-        """Return the type of object in the position given by 'coordinates'"""
+        """Return the type of object in the position given by 'cooordinates'"""
         res = []
         #front = self.getplaceahead(object)
         for ag in self.objects:

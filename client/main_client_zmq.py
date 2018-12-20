@@ -565,12 +565,21 @@ def follow_road(list): #Function to make the agent follow the right path
 
         contador = contador + 1
 
+def manual_movement():
+    while True:
+        action, value = input("Insert action value pairs:").split()
+        print("Action Value pair:", action, ":", value)
+        raw_x =c.send_request("info", value)
+        x = raw_x.decode()
+        if x != ("['player']") and x != ("['obstacle']"):
+            c.send_request(action, value)
+
 
 x = -1000
 while x != 0:
 
     try:
-        x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas\n "
+        x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas\n (4) - Manual Movement\n"
                       "Input: "))
         if x == 1:
             initial_project()
@@ -591,6 +600,9 @@ while x != 0:
             follow_road(road_list) #Follows the path to the goal
         elif x == 3:
             trepa_colinas()
+
+        elif x == 4:
+            manual_movement()
         else:
             print("Valor inexitente ou errado!")
     except ValueError as excepcao_erro:

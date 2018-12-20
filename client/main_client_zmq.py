@@ -576,7 +576,7 @@ x = -1000
 while x != 0:
 
     try:
-        x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas\n "
+        x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas\n (4) - Manual Movement\n"
                       "Input: "))
         if x == 1:
             initial_project()

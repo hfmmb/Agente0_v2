@@ -19,7 +19,6 @@ import tkinter as tk
 from server.__init__ import *
 from project_commons import *
 import time
-import sys
 import zmq
 import threading
 
@@ -97,17 +96,6 @@ def initialize_weights(image_dir):
                                           name, column, row, weight, False)
             board.add(patch[column][row], column, row)
 
-#def data_buffer(buffer):
-#    while True:
-#        if timer.is_alive():
-#            data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-#            local_hash, header, value = data.decode().split()
-#            if local_hash not in buffer:
-#                buffer[local_hash] = header, value
-#                print(buffer)
-#        else:
-#            timer.cancel()
-#            return buffer
 def verify_winner(agent):
     x_player = agent.get_x()
     y_player = agent.get_y()
@@ -117,165 +105,192 @@ def verify_winner(agent):
         broadcast_loop(str(msg))
 
 
+def buffer_filler(buffer):
+    print("Listening...")
+    import datetime
+    genesis_time = datetime.datetime.now().time()  # Gets the time of thread start
+    print("Genesis time:", genesis_time)
+    while True:
+        current_time = datetime.datetime.now().time()  # Gets the current execution time
+        print("Current time: ", current_time)
+        delta_time = int(current_time.second - genesis_time.second)
+        if BUFFER_TIME_INTERVAL - delta_time < BUFFER_TIME_INTERVAL:  # Checks if x amount of time has passed
+            try:
+                data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)  # Gets the client data and the current client hash
+                local_hash, header, value = data.decode().split()  # Splits the data
+                if local_hash not in buffer:  # Checks if the client is already buffered.
+                    buffer[local_hash] = header, value  # Add the new data to the dictionary
+                else:
+                    buffer[local_hash].pop()  # Removes old data from dictionary
+                    buffer[local_hash] = header, value  # Adds the updated version of the data
+            except ValueError as value_error:
+                print("ERROR: ", value_error)
+        else:  # If the timer surpasses the given time window breaks the data listening cycle
+            break
+    global AGENTS_NETWORK_BUFFER
+    AGENTS_NETWORK_BUFFER = buffer
+    print("AGENTS BUFFER: ", AGENTS_NETWORK_BUFFER)
+
+
 def loop():
+    runner = False
+    while True:
+        if not runner:  # Has the thread been created yet? Buffer running?
+            timer = threading.Timer(None, buffer_filler(AGENTS_NETWORK_BUFFER))  # Call a thread to fill up the buffer
+            timer.start()  # Start the thread
 
-            print("Listening...")
-#            buffer = {}
-#            timer = threading.Timer(BUFFER_TIME_INTERVAL, data_buffer)
-#            timer.start()
+            if not runner:  # Is the buffer now full with all the client data?
+                for local_hash, (header, value) in AGENTS_NETWORK_BUFFER.items():  # Get all the data contained in the buffer
+                    #local_hash = current_agent
+                    #header = current_agent
+                    #value = current_agent
+                    if local_hash not in AGENTS_DICT:  # Check if the agent is already in the board
+                        new_player(local_hash)  # Add the agent
 
+                        try:
+                            agent = AGENTS_DICT.get(local_hash)
+                        except KeyError as erro_excepcao:
+                            print("Chave não encontrada", erro_excepcao)
+                        res = ''
+                        if header == 'command':
+                            # -----------------------
+                            # movements without considering the direction
+                            # of the face of the object but testing the objects
+                            # -----------------------
+                            if value == 'north':
+                                agent.close_eyes()
+                                res = board.move_north(agent, 'forward')
+                                if not board.is_target_obstacle(res):
+                                    board.change_position(agent, res[0], res[1])
+                                msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                                broadcast_loop(str(msg))
 
+                            elif value == 'south':
+                                agent.close_eyes()
+                                res = board.move_south(agent, 'forward')
+                                if not board.is_target_obstacle(res):
+                                    board.change_position(agent, res[0], res[1])
+                                msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                                broadcast_loop(str(msg))
 
-            while True:
-                    try:
-                        data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-                        local_hash, header, value = data.decode().split()
-                        if local_hash not in AGENTS_DICT:
-                            new_player(local_hash)
+                            elif value == 'east':
 
-                    except ValueError as erro_excepcao:
-                        print("Valor nulo ou menor que dois?", erro_excepcao)
-                        break
-                    try:
-                        agent = AGENTS_DICT.get(local_hash)
-                    except KeyError as erro_excepcao:
-                        print("Chave não encontrada",erro_excepcao)
-                    res = ''
-                    if header == 'command':
-                        # -----------------------
-                        # movements without considering the direction
-                        # of the face of the object but testing the objects
-                        # -----------------------
-                        if value == 'north':
-                            agent.close_eyes()
-                            res = board.move_north(agent, 'forward')
-                            if not board.is_target_obstacle(res):
-                                board.change_position(agent, res[0], res[1])
-                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
-                            broadcast_loop(str(msg))
+                                agent.close_eyes()
+                                res = board.move_east(agent, 'forward')
+                                if not board.is_target_obstacle(res):
+                                    board.change_position(agent, res[0], res[1])
+                                msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                                broadcast_loop(str(msg))
 
-
-                        elif value == 'south':
-                            agent.close_eyes()
-                            res = board.move_south(agent, 'forward')
-                            if not board.is_target_obstacle(res):
-                                board.change_position(agent, res[0], res[1])
-                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
-                            broadcast_loop(str(msg))
-
-                        elif value == 'east':
-
-                            agent.close_eyes()
-                            res = board.move_east(agent, 'forward')
-                            if not board.is_target_obstacle(res):
-                                board.change_position(agent, res[0], res[1])
-                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
-                            broadcast_loop(str(msg))
-
-                        elif value == 'west':
-                            agent.close_eyes()
-                            res = board.move_west(agent, 'forward')
-                            if not board.is_target_obstacle(res):
-                                board.change_position(agent, res[0], res[1])
-                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
-                            broadcast_loop(str(msg))
+                            elif value == 'west':
+                                agent.close_eyes()
+                                res = board.move_west(agent, 'forward')
+                                if not board.is_target_obstacle(res):
+                                    board.change_position(agent, res[0], res[1])
+                                msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                                broadcast_loop(str(msg))
 
 
-                        # -----------------------
-                        # move to home
-                        # -----------------------
-                        elif value == 'home':
-                            res = board.move_home(agent)
+                            # -----------------------
+                            # move to home
+                            # -----------------------
+                            elif value == 'home':
+                                res = board.move_home(agent)
 
-                        elif value == 'forward':
-                            res = board.move(agent, 'forward')
+                            elif value == 'forward':
+                                res = board.move(agent, 'forward')
 
-                        elif value == 'left':
-                            res = board.turn_left(agent)
+                            elif value == 'left':
+                                res = board.turn_left(agent)
 
-                        elif value == 'right':
-                            res = board.turn_right(agent)
+                            elif value == 'right':
+                                res = board.turn_right(agent)
 
-                        elif value == "set_steps":
-                            res = board.set_stepsview(agent)
+                            elif value == "set_steps":
+                                res = board.set_stepsview(agent)
 
-                        elif value == "reset_steps":
-                            res = board.reset_stepsview(agent)
+                            elif value == "reset_steps":
+                                res = board.reset_stepsview(agent)
 
-                        elif value == "open_eyes":
-                            res = agent.open_eyes()
+                            elif value == "open_eyes":
+                                res = agent.open_eyes()
 
-                        elif value == "close_eyes":
-                            res = agent.close_eyes()
-                        elif value == "clean_board":
-                            res = board.clean_board()
-                        elif value == "bye" or value == "exit":
-                            exit(1)
+                            elif value == "close_eyes":
+                                res = agent.close_eyes()
+
+                            elif value == "clean_board":
+                                res = board.clean_board()
+
+                            elif value == "bye" or value == "exit":
+                                exit(1)
+                            else:
+                                pass
+                            verify_winner(agent)
+                        elif header == 'info':
+                            if value == 'direction':
+                                res = agent.get_direction()
+                            elif value == 'view':
+                                front = board.getplaceahead(agent)
+                                res = board.view_object(agent, front)
+                            elif value == "weights":
+                                res = board.view_weights(agent, 'front')
+                            elif value == 'map':
+                                print('Map:', board.view_global_weights(agent))
+                                res = board.view_global_weights(agent)
+                            elif value == 'obstacles':
+                                print('Obstacles:', board.view_obstacles(agent))
+                                res = board.view_obstacles(agent)
+                            elif value == 'goal' or value == 'target':
+                                res = board.getgoalposition(agent)
+                            elif value == 'position':
+                                res = (agent.get_x(), agent.get_y())
+                            elif value == 'maxcoord':
+                                res = board.get_maxcoord()
+                            elif value == 'north':
+                                # View north
+                                res = []
+                                for i in range (1, agent.get_raio() + 1):
+                                    front = board.getplacedir(agent, 'north', i)
+                                    res.append(board.view_object(agent, front))
+                            elif value == 'south':
+                                # View south
+                                res = []
+                                for i in range(1, agent.get_raio() + 1):
+                                    front = board.getplacedir(agent, 'south', i)
+                                    res.append(board.view_object(agent, front))
+                            elif value == 'east':
+                                # View east
+                                res = []
+                                for i in range(1, agent.get_raio() + 1):
+                                    front = board.getplacedir(agent, 'east', i)
+                                    res.append(board.view_object(agent, front))
+                            elif value == 'west':
+                                # View west
+                                res = []
+                                for i in range(1, agent.get_raio() + 1):
+                                    front = board.getplacedir(agent, 'west', i)
+                                    res.append(board.view_object(agent, front))
+
+                            else:
+                                pass
+                        elif header == 'raio':
+                            agent.set_raio(int(value))
+
+                        if res != '':
+                                return_data = str.encode(str(res))
                         else:
-                            pass
-                        verify_winner(agent)
-                    elif header == 'info':
-                        if value == 'direction':
-                            res = agent.get_direction()
-                        elif value == 'view':
-                            front = board.getplaceahead(agent)
-                            res = board.view_object(agent, front)
-                        elif value == "weights":
-                            res = board.view_weights(agent, 'front')
-                        elif value == 'map':
-                            print('Map:', board.view_global_weights(agent))
-                            res = board.view_global_weights(agent)
-                        elif value == 'obstacles':
-                            print('Obstacles:', board.view_obstacles(agent))
-                            res = board.view_obstacles(agent)
-                        elif value == 'goal' or value == 'target':
-                            res = board.getgoalposition(agent)
-                        elif value == 'position':
-                            res = (agent.get_x(), agent.get_y())
-                        elif value == 'maxcoord':
-                            res = board.get_maxcoord()
-                        elif value == 'north':
-                            # View north
-                            res = []
-                            for i in range (1, agent.get_raio() +1):
-                                front = board.getplacedir(agent, 'north', i)
-                                res.append(board.view_object(agent, front))
-                        elif value == 'south':
-                            # View south
-                            res = []
-                            for i in range(1, agent.get_raio() +1):
-                                front = board.getplacedir(agent, 'south', i)
-                                res.append(board.view_object(agent, front))
-                        elif value == 'east':
-                            # View east
-                            res = []
-                            for i in range(1, agent.get_raio() + 1):
-                                front = board.getplacedir(agent, 'east', i)
-                                res.append(board.view_object(agent, front))
-                        elif value == 'west':
-                            # View west
-                            res = []
-                            for i in range(1, agent.get_raio() + 1):
-                                front = board.getplacedir(agent, 'west', i)
-                                res.append(board.view_object(agent, front))
-
-                        else:
-                            pass
-                    elif header == 'raio':
-                        agent.set_raio(int(value))
+                            return_data = str.encode(
+                                "what? "
+                                "commands = <forward, left, right, set_steps, reset_steps, open_eyes, close_eyes>"
+                                "info = <direction, view, weights, map, goal, position, obstacles, maxcoord>")
+                        s.connected.send(return_data)
+                        root.update()
+            else:
+                print("Hello!")
+                runner = timer.isAlive()  # Check if the thread has finished yet
 
 
-                    if res != '':
-                            return_data = str.encode(str(res))
-                    else:
-                        return_data = str.encode(
-                            "what? "
-                            "commands = <forward, left, right, set_steps, reset_steps, open_eyes, close_eyes>"
-                            "info = <direction, view, weights, map, goal, position, obstacles, maxcoord>")
-                    s.connected.send(return_data)
-                    root.update()
-
-def broadcast_loop(msg = "Connected"):
+def broadcast_loop(msg="Connected"):
     context = zmq.Context()
 
     sock = context.socket(zmq.PUB)
@@ -286,9 +301,6 @@ def broadcast_loop(msg = "Connected"):
         time.sleep(1)
         sock.send_string(msg)
         x = x + 1
-
-
-
 
 
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
@@ -319,7 +331,6 @@ def new_player(hash):
     AGENT_COUNT += 1
 
     AGENTS_DICT[hash] = agent #Dicionario que guarda os agentes
-
 
 
 if __name__ == "__main__":

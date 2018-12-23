@@ -1,5 +1,4 @@
 import zmq
-import random
 import time
 from project_commons import *
 

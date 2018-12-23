@@ -16,7 +16,11 @@ from client.client_zmq import Client
 import random
 from tkinter import messagebox
 from server.__init__ import *
-
+import threading
+import time
+import zmq
+import sys
+aux = ''
 c = Client()
 
 # path_to_goal = [c.send_request("info", "position"),  # Current Position
@@ -567,6 +571,7 @@ def follow_road(list): #Function to make the agent follow the right path
 
 def manual_movement():
     while True:
+        time.sleep(0.2)
         action, value = input("Insert action value pairs:").split()
         print("Action Value pair:", action, ":", value)
         raw_x =c.send_request("info", value)
@@ -584,6 +589,25 @@ def manual_movement():
 
         if position == goal:
             messagebox.showinfo("Vitoria", "Goal Achieved")
+
+
+def recv_loop():
+    global aux
+    context = zmq.Context()
+    sock = context.socket(zmq.SUB)
+    sock.setsockopt_string(zmq.SUBSCRIBE, '')
+    arg = "tcp://localhost:5000"
+    sock.connect(arg)
+
+    while True:
+        time.sleep(0.2)
+        message = sock.recv()
+        if message != aux:
+            print("\n ", message)
+            aux = message
+
+
+
 x = -1000
 while x != 0:
 
@@ -611,7 +635,12 @@ while x != 0:
             trepa_colinas()
 
         elif x == 4:
-            manual_movement()
+            t1 = threading.Thread(target=recv_loop)
+            t2 = threading.Thread(target=manual_movement)
+            t1.start()
+            t2.start()
+            t1.join()
+            t2.join()
         else:
             print("Valor inexitente ou errado!")
     except ValueError as excepcao_erro:

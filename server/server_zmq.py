@@ -12,6 +12,7 @@ class Server:
         socket.bind("tcp://*:" + str(port))
         self.connected = socket
 
+
     def close_connection(self):
         self.connected.close()
         pass

@@ -18,6 +18,9 @@ import random
 import tkinter as tk
 from server.__init__ import *
 from project_commons import *
+import time
+import sys
+import zmq
 import threading
 
 s = Server()
@@ -105,6 +108,14 @@ def initialize_weights(image_dir):
 #        else:
 #            timer.cancel()
 #            return buffer
+def verify_winner(agent):
+    x_player = agent.get_x()
+    y_player = agent.get_y()
+    x_goal, y_goal = board.getgoalposition(agent)
+    if x_player == x_goal and y_player == y_goal:
+        msg = "  O " + str(agent.get_name()) + " venceu o jogo"
+        broadcast_loop(str(msg))
+
 
 def loop():
 
@@ -118,10 +129,10 @@ def loop():
             while True:
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
+                        if s.connected not in CONNECTION_LIST:
+                            CONNECTION_LIST.append(s.connected)
                         local_hash, header, value = data.decode().split()
-                        # print("Hash: ", local_hash, "Header: ", header, "Value:", value)
                         if local_hash not in AGENTS_DICT:
-                            print(local_hash)
                             new_player(local_hash)
 
                     except ValueError as erro_excepcao:
@@ -142,32 +153,35 @@ def loop():
                             res = board.move_north(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-                            if not board.is_target_player(res):
-                                board.change_position(agent, res[0], res[1])
+                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                            broadcast_loop(str(msg))
+
 
                         elif value == 'south':
                             agent.close_eyes()
                             res = board.move_south(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-                            if not board.is_target_player(res):
-                                board.change_position(agent, res[0], res[1])
+                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                            broadcast_loop(str(msg))
 
                         elif value == 'east':
+
                             agent.close_eyes()
                             res = board.move_east(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-                            if not board.is_target_player(res):
-                                board.change_position(agent, res[0], res[1])
+                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                            broadcast_loop(str(msg))
 
                         elif value == 'west':
                             agent.close_eyes()
                             res = board.move_west(agent, 'forward')
                             if not board.is_target_obstacle(res):
                                 board.change_position(agent, res[0], res[1])
-                            if not board.is_target_player(res):
-                                board.change_position(agent, res[0], res[1])
+                            msg = "  O " + str(agent.get_name()) + " deslocou-se para as coordenadas(" + str(agent.get_x()) + "," + str(agent.get_y()) + ")"
+                            broadcast_loop(str(msg))
+
 
                         # -----------------------
                         # move to home
@@ -201,6 +215,7 @@ def loop():
                             exit(1)
                         else:
                             pass
+                        verify_winner(agent)
                     elif header == 'info':
                         if value == 'direction':
                             res = agent.get_direction()
@@ -255,6 +270,21 @@ def loop():
                     s.connected.send(return_data)
                     root.update()
 
+def broadcast_loop(msg = "Connected"):
+    context = zmq.Context()
+
+    sock = context.socket(zmq.PUB)
+    sock.bind("tcp://*:5000")
+
+    x = 0
+    while x < 3:
+        time.sleep(1)
+        sock.send_string(msg)
+        x = x + 1
+
+
+
+
 
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
 
@@ -266,7 +296,6 @@ def new_player(hash):
     if AGENT_COUNT > 0:
         for i in AGENTS_DICT:
             comparacao = AGENTS_DICT[i].get_home()
-            print(comparacao[0])
 
             if x == comparacao[0] and y == comparacao[1]:
                 player_coordinates = [1, 2]
@@ -284,8 +313,8 @@ def new_player(hash):
     root.update()
     AGENT_COUNT += 1
 
-    AGENTS_DICT[hash] = agent
-    print("Dicionário:", AGENTS_DICT)
+    AGENTS_DICT[hash] = agent #Dicionario que guarda os agentes
+
 
 
 if __name__ == "__main__":

@@ -35,203 +35,6 @@ c = Client()
 # path_to_goal = c.pesquisa_profundidade(5, path_to_goal)
 
 
-def initial_project():
-    history_list = []
-    history_list_handicaps = []
-    penalty = -1
-    while True:
-
-            c.send_request("command", "set_steps")
-
-            n_fitness = 0
-            s_fitness = 0
-            e_fitness = 0
-            o_fitness = 0
-            try:
-                posicao_atual = c.send_request("info", "position")
-
-            except ValueError as erro_valor:
-                print("Valor invalido ou nulo", erro_valor)
-            cord_x = int(posicao_atual[1])
-            cord_y = int(posicao_atual[4])
-            history_list.append([cord_x, cord_y])
-            penalty = penalty * 2
-            history_list_handicaps.append(penalty)
-            print("LISTA:", history_list)
-            print("PENALTYS: ", history_list_handicaps)
-            print([cord_x, cord_y])
-    # ------------------------------------Make the agent look around the current position
-
-            oeste = c.send_request("info", "west")
-
-            norte = c.send_request("info", "north")
-
-            este = c.send_request("info", "east")
-
-            sul = c.send_request("info", "south")
-
-    # ------------------------------------------------------------------------------------------------------------
-            print("LISTA:", history_list)
-
-            print("NORTE:", norte)
-            print("OESTE:", oeste)
-            print("SUL:", sul)
-            print("ESTE:", este)
-            print("posicao atual:", posicao_atual)
-    # ---------------------------Secçao de codigo abaixo serve para o agente identificar o que viu e atribuir o fitness
-            if norte == "['obstacle']":
-                n_fitness = -9999999
-                print("Obstacle found!")
-            elif [cord_x, cord_y - 1] in history_list:
-
-                n_fitness = history_list_handicaps[history_list.index([cord_x, cord_y - 1])]
-                print("NORTH")
-            elif norte == "['']":
-                 n_fitness = -10
-                 print("Empty position!")
-
-            if este == "['obstacle']":
-                e_fitness = -9999999
-                print("Encontrei obstaculo")
-            elif [cord_x + 1, cord_y] in history_list:
-                e_fitness = history_list_handicaps[history_list.index([cord_x + 1, cord_y])]
-                print("ja passei por aqui")
-            elif este == "['']":
-                e_fitness = -10
-                print("Casa vazia")
-
-            if sul == "['obstacle']":
-                s_fitness = -9999999
-                print("Encontrei obstaculo")
-            elif [cord_x, cord_y + 1] in history_list:
-                s_fitness = history_list_handicaps[history_list.index([cord_x, cord_y + 1])]
-                print("ja passei por aqui")
-            elif sul == "['']":
-                s_fitness = -10
-                print("Casa vazia")
-
-            if oeste == "['obstacle']":
-                o_fitness = -9999999
-                print("Encontrei obstaculo")
-            elif [cord_x - 1, cord_y] in history_list:
-                o_fitness = history_list_handicaps[history_list.index([cord_x - 1, cord_y])]
-                print("ja passei por aqui")
-            elif oeste == "['']":
-                o_fitness = -10
-                print("Casa vazia")
-    # ------------------------------------------------------------------------------------------------------------------
-
-            print(".................................................................................................")
-            print("n_fitness:", n_fitness)
-            print("o_fitness:", o_fitness)
-            print("s_fitness:", s_fitness)
-            print("e_fitness:", e_fitness)
-            print(".................................................................................................")
-
-    # ----------------------Secçao de codigo abaixo serve pro cliente se movimentar tendo em conta os valores do fitness
-
-            # -----Casos em qe existem 3 possiveis caminhos-----------------------
-
-            if n_fitness > e_fitness and n_fitness == s_fitness and n_fitness == o_fitness:
-                rand = random.randint(0, 2)
-
-                if rand == 0:  # North
-                    c.send_request("command", "north")
-                elif rand == 1:  # South
-                    c.send_request("command", "south")
-                elif rand == 2:  # West
-                    c.send_request("command", "west")
-            elif n_fitness == e_fitness and n_fitness > s_fitness and n_fitness == o_fitness:
-                rand = random.randint(0, 2)
-                if rand == 0:  # North
-                    c.send_request("command", "north")
-                elif rand == 1:  # East
-                    c.send_request("command", "east")
-                elif rand == 2:  # West
-                    c.send_request("command", "west")
-
-            elif n_fitness == e_fitness and n_fitness == s_fitness and n_fitness > o_fitness:
-                rand = random.randint(0, 2)
-
-                if rand == 0:  # North
-                    c.send_request("command", "north")
-                elif rand == 1:  # South
-                    c.send_request("command", "south")
-                elif rand == 2:  # East
-                    c.send_request("command", "east")
-
-            elif s_fitness > n_fitness and s_fitness == e_fitness and s_fitness == o_fitness:
-                rand = random.randint(0, 2)
-                if rand == 0:  # South
-                    c.send_request("command", "south")
-                elif rand == 1:  # East
-                    c.send_request("command", "east")
-                elif rand == 2:  # West
-                    c.send_request("command", "west")
-
-            # -----Casos em qe existem 2 possiveis caminhos-----------------------
-
-            elif n_fitness > e_fitness and n_fitness == s_fitness and n_fitness > o_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Norte
-                    c.send_request("command", "north")
-                elif rand == 1:  # Sul
-                    c.send_request("command", "south")
-
-            elif n_fitness > e_fitness and n_fitness > s_fitness and n_fitness == o_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Norte
-                    c.send_request("command", "north")
-                elif rand == 1:  # Oeste
-                    c.send_request("command", "west")
-
-            elif n_fitness == e_fitness and n_fitness > s_fitness and n_fitness > o_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Norte
-                    c.send_request("command", "north")
-                elif rand == 1:  # Este
-                    c.send_request("command", "east")
-
-            elif s_fitness > e_fitness and s_fitness > n_fitness and s_fitness == o_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Sul
-                    c.send_request("command", "south")
-                elif rand == 1:  # Oeste
-                    c.send_request("command", "west")
-
-            elif s_fitness == e_fitness and s_fitness > n_fitness and s_fitness > o_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Sul
-                    c.send_request("command", "south")
-                elif rand == 1:  # Este
-                    c.send_request("command", "east")
-
-            elif o_fitness == e_fitness and o_fitness > n_fitness and o_fitness > s_fitness:
-                rand = random.randint(0, 1)
-
-                if rand == 0:  # Oeste
-                    c.send_request("command", "west")
-                elif rand == 1:  # Este
-                    c.send_request("command", "east")
-
-            # ------------casos em que somente existe 1 direcao certa---------
-            elif n_fitness >= e_fitness and n_fitness >= s_fitness and n_fitness >= o_fitness:
-                c.send_request("command", "north")
-            elif e_fitness >= n_fitness and e_fitness >= s_fitness and e_fitness >= o_fitness:
-                c.send_request("command", "east")
-            elif s_fitness >= n_fitness and s_fitness >= e_fitness and s_fitness >= o_fitness:
-                c.send_request("command", "south")
-            elif o_fitness >= n_fitness and o_fitness >= e_fitness and o_fitness >= s_fitness:
-                c.send_request("command", "west")
-
-    # ------------------------------------------------------------------------------------------------------------------
-
-
 def trepa_colinas():
 
         contador_tentativas = 0
@@ -438,7 +241,7 @@ def depth_search(depth_of_search, road_list, position, goal):
             real_west = ast.literal_eval(west)
 
             possibility_list = [str(real_south[0]), str(real_east[0]), str(real_north[0]), str(real_west[0])] # List of the possibilities in the current position
-            print("LALALALA: ", possibility_list)
+
             contador = 0
             prev_posi = [] #auxiliar variable
             while contador <= 3: # cycle to go through all 4 possibilities.. Each number is a possibility 0 == south | 1 == east | 2 == north | 3 == West
@@ -640,11 +443,10 @@ x = -1000
 while x != 0:
 
     try:
-        x = int(input("Digite: \n (1) - Teste Inicial \n (2) - Pesquisa em profundidade \n (3) - Trepa Colinas\n (4) - Manual Movement\n"
+        x = int(input("Digite: \n (1) - Pesquisa em profundidade \n (2) - Trepa Colinas\n (3) - Manual Movement\n"
                       "Input: "))
         if x == 1:
-            initial_project()
-        elif x == 2:
+
             c.send_request("raio", str(1))
             deph = int(input(("Digite o valor da profundidade: ")))
 
@@ -660,10 +462,10 @@ while x != 0:
             road_list = depth_search(deph, road_list, position, goal) # this function will get the values for the list
             print(road_list) # prints the list
             follow_road(road_list) #Follows the path to the goal
-        elif x == 3:
+        elif x == 2:
             trepa_colinas()
 
-        elif x == 4:
+        elif x == 3:
 
             t1 = threading.Thread(target=recv_loop)
             t2 = threading.Thread(target=manual_movement)

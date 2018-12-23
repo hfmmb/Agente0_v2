@@ -246,58 +246,24 @@ def trepa_colinas():
         coord_y = coord_x[4]  # Store coordinate y
         coord_x = coord_x[1]  # Store coordinate x
         starting_position = [int(coord_x), int(coord_y)]
+        c.send_request("raio", str(1))
 
         while not(starting_position[0] == goal[0] and starting_position[1] == goal[1]):
 
-            try:
+            try: #NORTH, soutH,east,west
                 possibility_list = []
-                #NORTH
-                requested_data = c.send_request("info", "north")
-                coord_x = requested_data.decode()
-                if coord_x == "[]":
-                    possibility_list.append(coord_x)
-                elif len(coord_x)>4:
-                    possibility_list.append(coord_x)
-                else:
-                    coord_y = int(coord_x[4])
-                    coord_x = int(coord_x[1])
-                    possibility_list.append([coord_x, coord_y])
 
-                #SOUTH
-                requested_data = c.send_request("info", "south")
-                coord_x = requested_data.decode()
-                if coord_x == "[]":
-                    possibility_list.append(coord_x)
-                elif len(coord_x)>4:
-                    possibility_list.append(coord_x)
-                else:
-                    coord_y = int(coord_x[4])
-                    coord_x = int(coord_x[1])
-                    possibility_list.append([coord_x, coord_y])
-                #EAST
-                requested_data = c.send_request("info", "east")
-                coord_x = requested_data.decode()
+                raw = c.send_request("info", "north")
+                north = raw.decode()
+                raw = c.send_request("info", "south")
+                south = raw.decode()
+                raw = c.send_request("info", "east")
+                east = raw.decode()
+                raw = c.send_request("info", "west")
+                west = raw.decode()
 
-                if coord_x == "[]":
-                    possibility_list.append(coord_x)
-                elif len(coord_x)>4:
-                    possibility_list.append(coord_x)
-                else:
-                    coord_y = int(coord_x[4])
-                    coord_x = int(coord_x[1])
-                    possibility_list.append([coord_x, coord_y])
+                possibility_list = [north[0], south[0], east[0], west[0]]  # List of the possibilities in the current position
 
-               #WEST
-                requested_data = c.send_request("info", "west")
-                coord_x = requested_data.decode()
-                if coord_x == "[]":
-                    possibility_list.append(coord_x)
-                elif len(coord_x)>4:
-                    possibility_list.append(coord_x)
-                else:
-                    coord_y = int(coord_x[4])
-                    coord_x = int(coord_x[1])
-                    possibility_list.append([coord_x, coord_y])
 
                 generated_random_number = random.randint(0, 1)
                 if generated_random_number == 0:
@@ -460,14 +426,19 @@ def depth_search(depth_of_search, road_list, position, goal):
 
             raw = c.send_request("info", "south")
             south = raw.decode()
+            real_south = ast.literal_eval(south)
             raw =  c.send_request("info", "east")
             east = raw.decode()
+            real_east = ast.literal_eval(east)
             raw = c.send_request("info", "north")
             north = raw.decode()
+            real_north = ast.literal_eval(north)
             raw = c.send_request("info", "west")
             west = raw.decode()
+            real_west = ast.literal_eval(west)
 
-            possibility_list = [south, east, north, west] # List of the possibilities in the current position
+            possibility_list = [str(real_south[0]), str(real_east[0]), str(real_north[0]), str(real_west[0])] # List of the possibilities in the current position
+            print("LALALALA: ", possibility_list)
             contador = 0
             prev_posi = [] #auxiliar variable
             while contador <= 3: # cycle to go through all 4 possibilities.. Each number is a possibility 0 == south | 1 == east | 2 == north | 3 == West
@@ -545,12 +516,8 @@ def follow_road(list): #Function to make the agent follow the right path
     contador = 0
     while contador < len(list): # cycle to go through all the elements of the list
 
-        c.send_request("info", "position") #This "INFO_POSITIONS" serve to make the program go slower so we can see the agent moving
-        c.send_request("info", "position")
-        c.send_request("info", "position")
-        c.send_request("info", "position")
-        c.send_request("info", "position")
-        c.send_request("info", "position")
+        c.send_request("info", "position") #
+
 
         if position[0] < list[contador][0]: #compare the current X coordinate with the X coordinate of the current element on the list
             position[0] = position[0] + 1 #and change if needed
@@ -634,7 +601,8 @@ def manual_movement():
         elif action == "command" and value == "north" or value == "south" or value == "east" or value == "west":
             raw_x = c.send_request("info", value)
             x = raw_x.decode()
-            if x[0] != ("['player']") and x[0] != ("['obstacle']"):
+            real_x = ast.literal_eval(x)
+            if str(real_x[0]) != ("['player']") and str(real_x[0]) != ("['obstacle']"):
                 c.send_request(action, value)
         else:
             c.send_request(action, value)
@@ -677,6 +645,7 @@ while x != 0:
         if x == 1:
             initial_project()
         elif x == 2:
+            c.send_request("raio", str(1))
             deph = int(input(("Digite o valor da profundidade: ")))
 
             raw = c.send_request("info", "position")

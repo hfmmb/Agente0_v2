@@ -300,13 +300,21 @@ def new_player(hash):
     y = 0
     if AGENT_COUNT > 0:
         for i in AGENTS_DICT:
-            comparacao = AGENTS_DICT[i].get_home()
+            comparacao_x = AGENTS_DICT[i].get_x()#posicoes dos agentes
+            comparacao_y = AGENTS_DICT[i].get_y()
+            goal_x, goal_y = board.getgoalposition(AGENTS_DICT[i])
 
-            if x == comparacao[0] and y == comparacao[1]:
-                player_coordinates = [1, 2]
+            if x == goal_x and y == goal_y:
+                x =random.randint(0, 5)
+                y = random.randint(0, 5)
+
+            if x == comparacao_x and y == comparacao_y:
+                x = random.randint(0, 5)
+                y = random.randint(0, 5)
+        player_coordinates = [x,y]
 
 
-
+    print("valoresfinais:", player_coordinates)
 
     # Initialize player
     agent = gb.Player(CONST_IMAGE_DIR, 'player' + str(AGENT_COUNT), player_coordinates[0], player_coordinates[1], 'south', 'front', True)

@@ -19,6 +19,7 @@ from server.__init__ import *
 import threading
 import time
 import zmq
+import ast
 import sys
 aux = ''
 c = Client()
@@ -570,13 +571,60 @@ def follow_road(list): #Function to make the agent follow the right path
         contador = contador + 1
 
 def manual_movement():
+    raio = int(input("Digite o valor do raio de visao do agente: "))
+    c.send_request("raio", str(raio))
     while True:
         time.sleep(0.2)
         action, value = input("Insert action value pairs:").split()
         print("Action Value pair:", action, ":", value)
-        raw_x =c.send_request("info", value)
-        x = raw_x.decode()
-        if x != ("['player']") and x != ("['obstacle']"):
+        if action == "info":
+
+            raw = c.send_request("info", "position")
+            raw_dec = raw.decode()
+
+            if value == "north":
+
+                raw_values =c.send_request(action, value)
+                x = raw_values.decode()
+                real_x = ast.literal_eval(x)
+                for i in range(0 , len(real_x)):
+                    coord_x = int(raw_dec[1])
+                    coord_y = int(raw_dec[4]) - i -1
+                    if coord_x >=0 and coord_y >= 0 and coord_x <= 5 and coord_y <= 5:
+                        print("Coordinates(", str(coord_x) + "," + str(coord_y), "): ", real_x[i])
+            elif value == "south":
+                raw_values = c.send_request(action, value)
+                x = raw_values.decode()
+                real_x = ast.literal_eval(x)
+                for i in range(0, len(real_x)):
+                    coord_x = int(raw_dec[1])
+                    coord_y = int(raw_dec[4]) + i + 1
+                    if coord_x >=0 and coord_y >= 0 and coord_x <= 5 and coord_y <= 5:
+                        print("Coordinates(", str(coord_x) + "," + str(coord_y), "): ", real_x[i])
+            elif value == "east":
+                raw_values = c.send_request(action, value)
+                x = raw_values.decode()
+                real_x = ast.literal_eval(x)
+                for i in range(0, len(real_x)):
+                    coord_x = int(raw_dec[1]) + i + 1
+                    coord_y = int(raw_dec[4])
+                    if coord_x >=0 and coord_y >= 0 and coord_x <= 5 and coord_y <= 5:
+                        print("Coordinates(", str(coord_x) + "," + str(coord_y), "): ", real_x[i])
+            elif value == "west":
+                raw_values = c.send_request(action, value)
+                x = raw_values.decode()
+                real_x = ast.literal_eval(x)
+                for i in range(0, len(real_x)):
+                    coord_x = int(raw_dec[1]) -i - 1
+                    coord_y = int(raw_dec[4])
+                    if coord_x >=0 and coord_y >= 0 and coord_x <= 5 and coord_y <= 5:
+                        print("Coordinates(", str(coord_x) + "," + str(coord_y), "): ", real_x[i])
+        elif action == "command" and value == "north" or value == "south" or value == "east" or value == "west":
+            raw_x = c.send_request("info", value)
+            x = raw_x.decode()
+            if x[0] != ("['player']") and x[0] != ("['obstacle']"):
+                c.send_request(action, value)
+        else:
             c.send_request(action, value)
 
         raw = c.send_request("info", "position")
@@ -635,6 +683,7 @@ while x != 0:
             trepa_colinas()
 
         elif x == 4:
+
             t1 = threading.Thread(target=recv_loop)
             t2 = threading.Thread(target=manual_movement)
             t1.start()

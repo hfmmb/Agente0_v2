@@ -236,30 +236,37 @@ def loop():
                             res = board.get_maxcoord()
                         elif value == 'north':
                             # View north
-                            front = board.getplacedir(agent, 'north')
-                            res = board.view_object(agent, front)
-                            print("NORTH: ", res)
+                            res = []
+                            for i in range (1, agent.get_raio() +1):
+                                front = board.getplacedir(agent, 'north', i)
+                                res.append(board.view_object(agent, front))
                         elif value == 'south':
-                            # View north
-                            front = board.getplacedir(agent, 'south')
-                            res = board.view_object(agent, front)
-                            print("SOUTH: ", res)
+                            # View south
+                            res = []
+                            for i in range(1, agent.get_raio() +1):
+                                front = board.getplacedir(agent, 'south', i)
+                                res.append(board.view_object(agent, front))
                         elif value == 'east':
-                            # View north
-                            front = board.getplacedir(agent, 'east')
-                            res = board.view_object(agent, front)
-                            print("EAST: ", res)
-
+                            # View east
+                            res = []
+                            for i in range(1, agent.get_raio() + 1):
+                                front = board.getplacedir(agent, 'east', i)
+                                res.append(board.view_object(agent, front))
                         elif value == 'west':
-                            # View north
-                            front = board.getplacedir(agent, 'west')
-                            res = board.view_object(agent, front)
-                            print("WEST: ", res)
+                            # View west
+                            res = []
+                            for i in range(1, agent.get_raio() + 1):
+                                front = board.getplacedir(agent, 'west', i)
+                                res.append(board.view_object(agent, front))
 
                         else:
                             pass
+                    elif header == 'raio':
+                        agent.set_raio(int(value))
+
+
                     if res != '':
-                        return_data = str.encode(str(res))
+                            return_data = str.encode(str(res))
                     else:
                         return_data = str.encode(
                             "what? "

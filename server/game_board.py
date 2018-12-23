@@ -16,7 +16,7 @@ class Object:
     Different types of objects are special objects with specific attributes. This
     is the general object.
     """
-    def __init__(self, imageDir, name, imageFile, type, x, y, dir, eyes_open=False, width=0, heigh=0):
+    def __init__(self, imageDir, name, imageFile, type, x, y, dir, eyes_open=False, width=0, heigh=0, raio = 1):
         self.name = name
         self.x = x
         self.y = y
@@ -33,10 +33,14 @@ class Object:
         self.view_type = ''
         self.weight = 0.0
         self.steps_view = False
+        self.raio = raio
 
     def get_weight(self):
 
         return self.weight
+    def get_raio(self):
+
+        return self.raio
 
     def is_eyes_open(self):
 
@@ -104,6 +108,10 @@ class Object:
 
         self.x = x
 
+    def set_raio(self, raio):
+
+        self.raio = raio
+
     def set_direction(self, dir):
 
         '''dir can be north (up), south(down), east(right), west(left)'''
@@ -159,8 +167,8 @@ class Object:
 
 class Player(Object):
 
-    def __init__(self,imageDir,name,x,y,dir,view_type,width=0,heigh=0,):
-        super().__init__(imageDir,name,"agent1","bitmap",x,y,dir,width,heigh)
+    def __init__(self,imageDir,name,x,y,dir,view_type,width=0,heigh=0,raio = 1):
+        super().__init__(imageDir,name,"agent1","bitmap",x,y,dir,width,heigh,raio)
         self.view_type = view_type
 # ------------------------------------------------------------
 # CLASS OBSTACLE:
@@ -581,18 +589,18 @@ class GameBoard(tk.Frame):
                 return (object.get_x(), object.get_y())
 
 
-    def getplacedir(self, object, direction):
+    def getplacedir(self, object, direction, i):
         '''Preview position in direction'''
         if direction == "north":
-                return (object.get_x(), self.change_y(object.get_y() - 1))
+                return (object.get_x(), self.change_y(object.get_y() - i))
 
         elif direction == "south":
-                return (object.get_x(), self.change_y(object.get_y() + 1))
+                return (object.get_x(), self.change_y(object.get_y() + i))
 
         elif direction == "east":
-                return (self.change_x(object.get_x() + 1), object.get_y())
+                return (self.change_x(object.get_x() + i), object.get_y())
         elif direction == "west":
-                return (self.change_x(object.get_x() - 1), object.get_y())
+                return (self.change_x(object.get_x() - i), object.get_y())
         else:
                 return (object.get_x(), object.get_y())
 

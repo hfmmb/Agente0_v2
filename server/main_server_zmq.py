@@ -129,8 +129,6 @@ def loop():
             while True:
                     try:
                         data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-                        if s.connected not in CONNECTION_LIST:
-                            CONNECTION_LIST.append(s.connected)
                         local_hash, header, value = data.decode().split()
                         if local_hash not in AGENTS_DICT:
                             new_player(local_hash)
@@ -141,7 +139,7 @@ def loop():
                     try:
                         agent = AGENTS_DICT.get(local_hash)
                     except KeyError as erro_excepcao:
-                        print("Chave não encontrada",erro_excepcao)
+                        print("Chave  não encontrada",erro_excepcao)
                     res = ''
                     if header == 'command':
                         # -----------------------

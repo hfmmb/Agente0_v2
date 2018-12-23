@@ -610,7 +610,7 @@ class GameBoard(tk.Frame):
     # ------------------------------------------------
 
     def view_object(self, object, coordinates):
-        """Return the type of object in the position given by 'cooordinates'"""
+        """Return the type of object in the position  given by 'cooordinates'"""
         res = []
         #front = self.getplaceahead(object)
         for ag in self.objects:

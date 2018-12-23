@@ -21,7 +21,7 @@ class Client:
 
         :param request_header : string -> Contains the descriptor of the request <info; command; ...>
         :param request : string -> Contains the command or message to send to the server <north; east; ...>
-        :return: reply -> Contains the reply that the server sent to the client, contents can vary.
+        :return: reply -> Contains  the reply that the server sent to the client, contents can vary.
         """
         # Sending request to server
         #print("Sending request...")

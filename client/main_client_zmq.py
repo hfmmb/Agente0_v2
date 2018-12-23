@@ -639,10 +639,6 @@ def manual_movement():
         else:
             c.send_request(action, value)
 
-        raw = c.send_request("info", "position")
-        raw_dec = raw.decode()
-        position = [int(raw_dec[1]), int(raw_dec[4])]
-
         raw = c.send_request("info", "goal")
         raw_dec = raw.decode()
         goal = [int(raw_dec[1]), int(raw_dec[4])]

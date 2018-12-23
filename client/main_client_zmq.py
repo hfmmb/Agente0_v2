@@ -20,7 +20,6 @@ import threading
 import time
 import zmq
 import ast
-import sys
 aux = ''
 c = Client()
 
@@ -535,6 +534,7 @@ def depth_search(depth_of_search, road_list, position, goal):
     else:
         return "no deph" #It returns this if it there is no more deph
 
+
 def follow_road(list): #Function to make the agent follow the right path
     c.send_request("command", "home") # send the agent back HOME
 
@@ -665,7 +665,6 @@ def recv_loop():
         if message != aux:
             print("\n ", message)
             aux = message
-
 
 
 x = -1000

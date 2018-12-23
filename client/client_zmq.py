@@ -23,15 +23,10 @@ class Client:
         :return: reply -> Contains the reply that the server sent to the client, contents can vary.
         """
         # Sending request to server
-        #print("Sending request...")
-        # self.connected.send(request_header+" "+ request)
         self.connected.send_string(str(self.send_object_hash()) + " " + request_header + " " + request)
         # Reading the reply from server
-        #print("Waiting for reply...")
         reply = self.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)
-        # Printing the reply
-        #print("Reply from server: ", reply)
-        time.sleep(0.5)
+        time.sleep(0.25)
         return reply
 
     def send_object_hash(self):

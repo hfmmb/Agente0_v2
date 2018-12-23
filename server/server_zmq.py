@@ -9,13 +9,12 @@ class Server:
         context = zmq.Context()
         socket = context.socket(zmq.REP)
 
+        #socket.bind("tcp://"+str(ip)+":" + str(port))
         socket.bind("tcp://*:" + str(port))
         self.connected = socket
 
-
     def close_connection(self):
         self.connected.close()
-        pass
 
     @staticmethod
     def randomize_buffer(data):

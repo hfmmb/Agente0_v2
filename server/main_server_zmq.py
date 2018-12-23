@@ -107,39 +107,36 @@ def verify_winner(agent):
 
 def buffer_filler(buffer):
     print("Listening...")
-    import datetime
-    genesis_time = datetime.datetime.now().time()  # Gets the time of thread start
-    print("Genesis time:", genesis_time)
+    global AGENTS_NETWORK_BUFFER
     while True:
-        current_time = datetime.datetime.now().time()  # Gets the current execution time
-        print("Current time: ", current_time)
-        delta_time = int(current_time.second - genesis_time.second)
-        if BUFFER_TIME_INTERVAL - delta_time < BUFFER_TIME_INTERVAL:  # Checks if x amount of time has passed
             try:
-                data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)  # Gets the client data and the current client hash
-                local_hash, header, value = data.decode().split()  # Splits the data
-                if local_hash not in buffer:  # Checks if the client is already buffered.
+                data = s.connected.recv_string(CONST_NETWORK_STREAM_BYTE_SIZE)
+
+                #data = s.connected.recv(CONST_NETWORK_STREAM_BYTE_SIZE)  # Gets the client data and the current client hash
+                #local_hash, header, value = data.decode().split()  # Splits the data
+                local_hash, header, value = data.split()
+                if local_hash not in buffer or len(buffer) == 0:  # Checks if the client is already buffered.
                     buffer[local_hash] = header, value  # Add the new data to the dictionary
                 else:
                     buffer[local_hash].pop()  # Removes old data from dictionary
                     buffer[local_hash] = header, value  # Adds the updated version of the data
-            except ValueError as value_error:
+            except ConnectionError as value_error:
                 print("ERROR: ", value_error)
-        else:  # If the timer surpasses the given time window breaks the data listening cycle
-            break
-    global AGENTS_NETWORK_BUFFER
-    AGENTS_NETWORK_BUFFER = buffer
-    print("AGENTS BUFFER: ", AGENTS_NETWORK_BUFFER)
+            AGENTS_NETWORK_BUFFER = buffer
+            print("AGENTS BUFFER: ", AGENTS_NETWORK_BUFFER)
 
 
 def loop():
+
     runner = False
+    counter = 0
     while True:
         if not runner:  # Has the thread been created yet? Buffer running?
-            timer = threading.Timer(None, buffer_filler(AGENTS_NETWORK_BUFFER))  # Call a thread to fill up the buffer
-            timer.start()  # Start the thread
+            thread = threading.Thread(target=buffer_filler(AGENTS_NETWORK_BUFFER))  # Call a thread to fill up the buffer
+            thread.start()  # Start the thread
+            thread.join(BUFFER_TIME_INTERVAL)
 
-            if not runner:  # Is the buffer now full with all the client data?
+            if len(AGENTS_NETWORK_BUFFER) > 0:  # Is the buffer now full with all the client data?
                 for local_hash, (header, value) in AGENTS_NETWORK_BUFFER.items():  # Get all the data contained in the buffer
                     #local_hash = current_agent
                     #header = current_agent
@@ -286,8 +283,9 @@ def loop():
                         s.connected.send(return_data)
                         root.update()
             else:
-                print("Hello!")
-                runner = timer.isAlive()  # Check if the thread has finished yet
+                counter += 1
+                print("Hello!", counter)
+                runner = thread.isAlive()  # Check if the thread has finished yet
 
 
 def broadcast_loop(msg="Connected"):
@@ -304,6 +302,7 @@ def broadcast_loop(msg="Connected"):
 
 
 player_coordinates = [CONST_PLAYER_COORD_X, CONST_PLAYER_COORD_Y]
+
 
 def new_player(hash):
     global player_coordinates

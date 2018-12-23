@@ -139,7 +139,7 @@ def loop():
                     try:
                         agent = AGENTS_DICT.get(local_hash)
                     except KeyError as erro_excepcao:
-                        print("Chave  não encontrada",erro_excepcao)
+                        print("Chave não encontrada",erro_excepcao)
                     res = ''
                     if header == 'command':
                         # -----------------------

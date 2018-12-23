@@ -6,7 +6,7 @@
 @since: 12/11/2018
 
 Creates a client server connection to send and receive commands with the help of the module ZeroMQ <pyzmq>, this method
-makes the connection more reliable and stable  than doing it directly using sockets. This is the Client side of the
+makes the connection more reliable and stable than doing it directly using sockets. This is the Client side of the
 Client-Server network arquiteture.
 
 ZeroMQ: http://zguide.zeromq.org/

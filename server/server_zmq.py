@@ -20,7 +20,7 @@ class Server:
     @staticmethod
     def randomize_buffer(data):
         """
-        Recives the data sent by the  clients stored in the buffer, and randomizes the instruction order of said data.
+        Recives the data sent by the clients stored in the buffer, and randomizes the instruction order of said data.
         :param data: List -> Contains the original unrandomized data
         :return: ordered_data -> Contains the final randomized data buffer
         """

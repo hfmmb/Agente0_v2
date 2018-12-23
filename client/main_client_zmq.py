@@ -582,7 +582,12 @@ def manual_movement():
             raw = c.send_request("info", "position")
             raw_dec = raw.decode()
 
-            if value == "north":
+            if value == "position":
+
+                position = [int(raw_dec[1]), int(raw_dec[4])]
+                print("A sua posição: ", position)
+
+            elif value == "north":
 
                 raw_values =c.send_request(action, value)
                 x = raw_values.decode()
@@ -619,6 +624,13 @@ def manual_movement():
                     coord_y = int(raw_dec[4])
                     if coord_x >=0 and coord_y >= 0 and coord_x <= 5 and coord_y <= 5:
                         print("Coordinates(", str(coord_x) + "," + str(coord_y), "): ", real_x[i])
+
+            else:
+
+                raw = c.send_request(action, value)
+                raw_info = raw.decode()
+                print(raw_info)
+
         elif action == "command" and value == "north" or value == "south" or value == "east" or value == "west":
             raw_x = c.send_request("info", value)
             x = raw_x.decode()
@@ -626,10 +638,6 @@ def manual_movement():
                 c.send_request(action, value)
         else:
             c.send_request(action, value)
-
-        raw = c.send_request("info", "position")
-        raw_dec = raw.decode()
-        position = [int(raw_dec[1]), int(raw_dec[4])]
 
         raw = c.send_request("info", "goal")
         raw_dec = raw.decode()

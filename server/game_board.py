@@ -583,6 +583,7 @@ class GameBoard(tk.Frame):
 
         elif object.get_direction() == "east":
                 return (self.change_x(object.get_x() + 1), object.get_y())
+
         elif object.get_direction() == "west":
                 return (self.change_x(object.get_x() - 1), object.get_y())
         else:
